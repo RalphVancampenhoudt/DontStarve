@@ -9,7 +9,7 @@ public class Food
 	double x;
 	double radius;
 	public boolean eaten = false;
-	
+
 	public Food(World world, double x, double y) 
 	{
 		this.setPosX(x);
@@ -25,7 +25,7 @@ public class Food
 	public void setPosY(double y) 
 	{
 		if (isValidPosition(this.getPosX(), y))
-				this.y = y;
+			this.y = y;
 	}
 
 	public void setPosX(double x) 
@@ -53,7 +53,7 @@ public class Food
 	{
 		return 0.20;
 	}
-	
+
 	public void setRadius(double radius)
 	{
 		this.radius = 0.20;
@@ -65,14 +65,14 @@ public class Food
 			return false;
 		return true;
 	}
-	
+
 	public boolean isValidPosition(double posX, double posY) throws IllegalArgumentException 
 	{
-	        if ((posX == Double.NEGATIVE_INFINITY) || (posY == Double.NEGATIVE_INFINITY) || (posX == Double.POSITIVE_INFINITY) || (posY == Double.POSITIVE_INFINITY))
-	        	throw new IllegalArgumentException("Not a valid value for position");
-	        return true;
+		if ((posX == Double.NEGATIVE_INFINITY) || (posY == Double.NEGATIVE_INFINITY) || (posX == Double.POSITIVE_INFINITY) || (posY == Double.POSITIVE_INFINITY))
+			throw new IllegalArgumentException("Not a valid value for position");
+		return true;
 	}
-	
+
 	public void destroy()
 	{
 		if (!isActive())

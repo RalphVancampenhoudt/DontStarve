@@ -8,7 +8,7 @@ public class GUIOptions {
 	 * 
 	 * Full screen can also be disabled from the command line by providing the -window argument
 	 */
-	public boolean disableFullScreen = true;
+	public boolean disableFullScreen = false;
 	
 	/**
 	 * Random seed for the game

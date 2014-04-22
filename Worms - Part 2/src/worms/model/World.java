@@ -362,11 +362,11 @@ public class World
 		projectiles.remove(projectile);
 	}
 
-	
+
 	public double getDistance(double x,double y,double newX,double newY){
 		return Math.sqrt(Math.pow((newX - x), 2) + Math.pow((newY -y), 2));
 	}
-	
+
 	public boolean teamExists(Team team)
 	{
 		return (team != null);

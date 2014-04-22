@@ -9,8 +9,9 @@ package worms.model;
 //TODO: Worms have to be removed ------> HIGHEST PRIORITY
 
 //TODO: DOCUMENTATION ------> HIGHEST PRIORITY
+	//RALPH: Food, Projectile, Team, Facade
+	//RUBEN: Worm, World
 
-//TODO fullscreen fixen
 /**
  * A class of worms involving a position consisting of an X- and Y-coordinate, an angle,
  * a radius, a mass, action points (current and maximum)
@@ -176,9 +177,6 @@ public class Worm
 	 * @post number of hitpoints is set to the maximum number of hitpoints a worm can have
 	 * 		| new.getHP() == this.getMaxHP()
 	 * 
-	 * @post team of this worm is set to the chosen team
-	 * 		| new.getTeam() == team
-	 * 
 	 * @post world of this worm is set to the chosen world
 	 * 		| new.getWorld()  == world
 	 */ 
@@ -193,7 +191,6 @@ public class Worm
 		this.setHP(this.getMaxHP());
 		this.setWorld(world);
 	}
-
 
 
 

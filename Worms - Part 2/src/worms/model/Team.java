@@ -7,7 +7,7 @@ import worms.model.Worm;
 
 public class Team 
 {
-	
+
 	private String name;
 	private World world;
 	private ArrayList<Worm> teamMembers;
@@ -33,7 +33,7 @@ public class Team
 		return this.world;
 	}
 
-	
+
 	@Basic
 	public Worm getWorm(int index) throws IndexOutOfBoundsException 
 	{
@@ -42,7 +42,7 @@ public class Team
 		return teamMembers.get(index);
 	}
 
-	
+
 	@Basic
 	public int getAmountOfWorms() {
 		return teamMembers.size();
@@ -91,7 +91,7 @@ public class Team
 		return new ArrayList<Worm>(teamMembers);
 	}
 
-	
+
 	public void addWorm(Worm worm) 
 	{
 		assert (worm != null) && (worm.getTeam() == this);
@@ -99,7 +99,7 @@ public class Team
 		teamMembers.add(worm);
 	}
 
-	
+
 	public void removeAsWorm(Worm worm) 
 	{
 		assert (worm != null) && (worm.getTeam() == null);
@@ -111,14 +111,14 @@ public class Team
 	{
 		return name.matches("[A-Z][a-zA-Z0-9\\s'\"]+");
 	}
-	
+
 	public boolean isActive()
 	{
 		if (teamMembers.size() != 0)
 			return true;
 		return false;
 	}
-	
+
 	public void destroy()
 	{
 		if (!isActive())
