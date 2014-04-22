@@ -973,7 +973,6 @@ public class Worm
 			this.currentHP = HP;
 		if (HP < 0)
 		{
-			System.out.println("check1");
 			this.currentHP = 0;
 			this.destroy();
 		}

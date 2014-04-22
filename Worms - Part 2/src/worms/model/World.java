@@ -188,19 +188,15 @@ public class World
 		{
 			if (currentX < center) 
 			{
-				System.out.println("1a");
 				currentX += 1 * (this.getWorldWidth() / passableMap[0].length);
 			}
 
 			if (currentX > center) 
 			{
-				System.out.println("1b");
 				currentX -= 1 * (this.getWorldWidth() / passableMap[0].length);
 			}
-			System.out.println("1c");
 			worm.setPosX(currentX);
 		}
-		System.out.println("1d");
 		if (Math.abs(center - currentX) > worm.getRadius())
 			return currentX;
 		else

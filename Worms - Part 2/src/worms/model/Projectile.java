@@ -28,10 +28,6 @@ public class Projectile
 		}
 		else throw new IllegalArgumentException("Not a valid position for projectile");
 		this.setWorld(worm.getWorld());
-		System.out.println(x + "projectile");
-		System.out.println(y + "proj");
-		System.out.println(worm.getPosX());
-		System.out.println(worm.getPosY());
 	}
 
 	public void setWorld(World world) 
