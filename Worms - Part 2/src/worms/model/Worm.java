@@ -986,6 +986,8 @@ public class Worm
 	 * 
 	 * @return
 	 * 		true if the value of currentAP is a valid one
+	 * 			| hp >= 0
+	 * 			| hp <= getMaxHP()
 	 * 
 	 */
 	public boolean isValidHP(int hp) 
@@ -1049,10 +1051,15 @@ public class Worm
 	/*
 	 * This method selects the next weapon by increasing the index-number of the ArrayList weapons
 	 * 
-	 * if the index surpasses the amount of possible weapons, it gets set to 0
-	 * 		| index > weapons.size()
-	 * if the index falls below zero (should be impossible), it gets set to 0
-	 * 		| index < 0
+	 * @post
+	 * 		if the index surpasses the amount of possible weapons, it gets set to 0
+	 * 			| index > weapons.size()
+	 * 			| new.index == 0
+	 * 
+	 * @post
+	 * 		if the index falls below zero (should be impossible), it gets set to 0
+	 * 			| index < 0
+	 * 			| new.index == 0
 	 */
 	public void selectNextWeapon() 
 	{
@@ -1085,7 +1092,11 @@ public class Worm
 	 * 					| new.getCurrentAP() == getCurrentAP() - 10
 	 * 	
 	 * 			@effect
-	 * 				shootRifle() in class projectile
+	 * 				shootRifle(propulsionYield) in class projectile
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		if the worm can not shoot
+	 * 			| !canShoot()
 	 */
 	public void shoot(int propulsionYield) throws IllegalArgumentException
 	{
@@ -1222,6 +1233,19 @@ public class Worm
 		lookForFood();
 	}
 
+	
+	/**
+	 * Method to move the worm
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		if the worm cannot move (not enough AP)
+	 * 			| !canMove()
+	 * 
+	 * @post
+	 * 		The position gets set to the old position + the distance travelled
+	 * 			| new.getPosX() == getPosX() + distance[0]
+	 * 			| new.getPosY() == getPosY() + distance[1]
+	 */
 	public void move() throws IllegalArgumentException
 	{
 		if (!canMove())
@@ -1236,6 +1260,8 @@ public class Worm
 		fall();
 	}
 
+	
+	
 	protected double[] getMoveDistance() 
 	{
 		//Test different values for X, Y and D
@@ -1304,15 +1330,82 @@ public class Worm
 		return output;
 	}
 
+	
+	
+	/**
+	 * Method to calculate the cost of AP for a move of a certain distance
+	 * 
+	 * @param distance
+	 * 		The distance the worm wants to move
+	 * 
+	 * @return	
+	 * 		The 1 AP per step on the X-axis, 4 AP per step on the Y-axis
+	 * 			| (int) Math.ceil( Math.abs(Math.cos(slope)) + Math.abs(4*Math.sin(slope)))
+	 */
 	protected int calculateAPCostMove(double[] distance) 
 	{
 		double slope = Math.atan2(distance[1], distance[0]);
 		return (int) Math.ceil( Math.abs(Math.cos(slope)) + Math.abs(4*Math.sin(slope)));
 	}
+	
+	
 
+	/**
+	 * Method to inspect whether the worm can move from this location
+	 * 
+	 * @return
+	 * 		true if the worm has enough AP left to do this move
+	 * 			| isValidAP(this.getCurrentAP() - this.calculateAPCostMove(distance))
+	 */
 	public boolean canMove() 
 	{
 		double[] distance = this.getMoveDistance();
 		return (isValidAP(this.getCurrentAP() - this.calculateAPCostMove(distance)));
+	}
+	
+	
+	
+	/**
+	 * Method to inspect whether the amount of current AP is a valid amount
+	 * 
+	 * @param hp
+	 * 		The current amount of HP of the worm
+	 * 
+	 * @return
+	 * 		true if the value of hp is a valid one
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		If the amount of hp is smaller than zero and bigger than the maximum amount of HP possible
+	 * 			| hp < 0 
+	 * 			| hp > this.getMaxHP()
+	 */
+	public boolean isValidHP(double hp) throws IllegalArgumentException 
+	{
+		if ((0 > hp) && (hp > this.getMaxHP()))
+			throw new IllegalArgumentException("Not a valid value for HP");
+		return true;
+	}
+	
+	
+	
+	/**
+	 * Method to inspect whether the value of propulsionYield is a valid one
+	 * 
+	 * @param propulsionYield
+	 * 		The propulsionYield of the worm
+	 * 
+	 * @return
+	 * 		true if the value of propulsionYield is a valid one
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		If the value of propulsionYield is smaller than zero and bigger than 100
+	 * 			| propulsionYield < 0 
+	 * 			| propulsionYield > 100
+	 */
+	public boolean isValidPropulsionYield(double propulsionYield) throws IllegalArgumentException 
+	{
+		if ((0 > propulsionYield) && (propulsionYield > 100))
+			throw new IllegalArgumentException("Not a valid value for propulsionYield");
+		return true;
 	}
 }
