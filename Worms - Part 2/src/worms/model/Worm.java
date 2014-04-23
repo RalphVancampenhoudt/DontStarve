@@ -15,8 +15,7 @@ package worms.model;
  *		LOW PRIORITY																											  *
  *		------------																											  *
  *		1. DOCUMENTATION 																									      *
- *			 	RALPH: Food, Projectile, Team, Facade																			  *
- *				RUBEN: World																							          *
+ *			 	RALPH: Projectile, Facade																				          *
  *																																  *
  *		2. Make jump stop when hitting object or impassable 																      *
  *																																  *
