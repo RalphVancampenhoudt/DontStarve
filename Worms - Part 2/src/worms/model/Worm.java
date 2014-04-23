@@ -7,9 +7,7 @@ package worms.model;
  *																																  *
  *		HIGH PRIORITY																											  *
  *		-------------																											  *
- *		1. Shoot doesn't work (projectiles don't seem to spawn and bazooka can never shoot) 								 	  *
- *																																  *
- *		2. Worms have to be removed 																							  *
+ *		1. Shoot doesn't work (projectiles don't seem to spawn and bazooka can never shoot)										  *																						  *
  *																																  *
  *																																  *
  *		LOW PRIORITY																											  *
@@ -17,7 +15,9 @@ package worms.model;
  *																																  *
  *		1. Make jump stop when hitting object or impassable 																      *
  *																																  *
- *		2. Worms don't spawn on the ground, but literally on an adjacent tile (is this allowed?) 								  *																	      *
+ *		2. Worms don't spawn on the ground, but literally on an adjacent tile (is this allowed?) 								  *
+ *																																  *																													
+ *		3. Worms seem to be able to keep moving, even when AP is gone (Keeps taking smaller amounts (limit))				      *																	      *
  *			 																													  *
  *																																  *
  **********************************************************************************************************************************/
@@ -1485,6 +1485,8 @@ public class Worm
 	{
 		if ((0 > hp) && (hp > this.getMaxHP()))
 			throw new IllegalArgumentException("Not a valid value for HP");
+		if (hp == 0)
+				return false;
 		return true;
 	}
 	
