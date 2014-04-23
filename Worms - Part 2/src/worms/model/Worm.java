@@ -8,7 +8,11 @@ package worms.model;
  *		HIGH PRIORITY																											  *
  *		-------------																											  *
  *		1. Shoot doesn't work (projectiles don't seem to spawn and bazooka can never shoot)										  *																						  *
- *																																  *
+ *				Probably because Jump, jumpstep and jumptime are wrong since it shows the original position						  *
+ *				it adds the projectile and removes it, but the projectile is hidden behind worm									  *
+ *					QUESTION: do we have to change the jump for worm too then (is working?)										  *
+ *						COULD THIS SOLVE LOW PRIORITY NUMBER 1?																	  *		
+ *																														  		  *
  *																																  *
  *		LOW PRIORITY																											  *
  *		------------																						          			  *
@@ -16,6 +20,7 @@ package worms.model;
  *		1. Make jump stop when hitting object or impassable 																      *
  *																																  *
  *		2. Worms don't spawn on the ground, but literally on an adjacent tile (is this allowed?) 								  *
+ *				Can we change isAdjacent so only the positions beneath the worm are ok?											  *
  *																																  *																													
  *		3. Worms seem to be able to keep moving, even when AP is gone (Keeps taking smaller amounts (limit))				      *																	      *
  *			 																													  *
@@ -440,9 +445,6 @@ public class Worm
 	 * 		fall() 
 	 * 			sees if the worm can fall from the end location down to the next adjacent spot
 	 * 
-	 * @effect
-	 * 		destroy() 
-	 * 			sees if the worm has 0 HP and should be destroyed
 	 */
 	public void Jump() 
 	{
@@ -455,7 +457,6 @@ public class Worm
 		}
 		lookForFood();
 		fall();
-		destroy();
 	}
 
 	/**
@@ -1120,9 +1121,14 @@ public class Worm
 	 * @throws IllegalArgumentException
 	 * 		if the worm can not shoot
 	 * 			| !canShoot()
+	 * 		if the propulsionYield is invalid
+	 * 			| !isValidPropulsionYield(propulsionYield)
 	 */
 	public void shoot(int propulsionYield) throws IllegalArgumentException
 	{
+		if (!isValidPropulsionYield(propulsionYield))
+			throw new IllegalArgumentException("Not a valid value for propulsionYield");
+		
 		if (this.canShoot())
 		{
 			if (this.getSelectedWeapon() == "Bazooka")
@@ -1243,10 +1249,6 @@ public class Worm
 	 * @post 
 	 * 		The worm's references get removed
 	 * 			| new.getWorld() == null
-	 * 			| new.getPosX() == 0
-	 * 			| new.getPosY() == 0
-	 * 			| new.getRadius() == 0
-	 * 			| new.getAngle() == 0
 	 */
 	public void destroy()
 	{
@@ -1254,10 +1256,6 @@ public class Worm
 		{
 			this.getWorld().removeWorm(this);
 			this.setWorld(null);
-			this.setPosX(0);
-			this.setPosY(0);
-			this.setRadius(0);
-			this.setAngle(0);
 		}
 	}
 
