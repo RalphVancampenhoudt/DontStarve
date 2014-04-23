@@ -32,8 +32,11 @@ package worms.model;
  * A class of worms involving a position consisting of an X- and Y-coordinate, an angle,
  * a radius, a mass, action points (current and maximum)
  *
- * @version 1.0
+ * @version 2.0
+ * 
  * @Author Ruben Schroyen & Ralph Vancampenhoudt
+ * 
+ * An R² production for the course: Object-oriented Programming at KuLeuven
  * 
  * @invar isValidRadius(getRadius())
  * 
@@ -619,7 +622,7 @@ public class Worm
 	 * @param radius
 	 * 		The radius a worm has been given in meters
 	 * 
-	 * * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException
 	 * 		If the value for radius is not a valid one
 	 * 		| !isValidRadius(radius)
 	 * 
