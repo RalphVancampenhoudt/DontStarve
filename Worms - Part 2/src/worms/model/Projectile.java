@@ -104,16 +104,21 @@ public class Projectile
 	 * 
 	 * @throws IllegalArgumentException
 	 * 		If the position of the projectile is not a valid position.
+	 * 			| !(worm.isValidPosition(worm.getPosX() + Math.cos(worm.getAngle() * worm.getRadius()), worm.getPosY() + Math.sin(worm.getAngle() * worm.getRadius())))
 	 * 
 	 * @pre isValidPosition(getPosX(),getposY())
 	 * 
 	 * @post projectile has been given an owner.
+	 * 			| new.worm = worm
 	 * 
 	 * @post X-coordinate of the projectile is set to the X-coordinate of the edge of the worm. 
+	 * 			| new.getPosX() == worm.getPosX() + Math.cos(worm.getAngle() * worm.getRadius())
 	 * 
 	 * @post Y-coordinate of the projectile is set to the X-coordinate of the edge of the worm. 
+	 * 			| new.getPosY() == worm.getPosY() + Math.sin(worm.getAngle() * worm.getRadius())
 	 * 
 	 * @post World of the projectile is set to the world where the worm exists.
+	 * 			| new.getWorld() == worm.getWorld()
 	 */
 	public Projectile(Worm worm) throws IllegalArgumentException
 	{
@@ -134,7 +139,7 @@ public class Projectile
 	 * @param world
 	 * 
 	 * @post Sets Sets the world of the food to the given world
-	 * 			|new.world= world
+	 * 			|new.world = world
 	 */
 	@Basic @Model
 	public void setWorld(World world) 
@@ -146,6 +151,7 @@ public class Projectile
 	
 	/**
 	 *  This method returns the world of the projectile.
+	 * 
 	 * @return world
 	 */
 	@Basic @Raw
@@ -192,6 +198,7 @@ public class Projectile
 	
 	/**
 	 * This method returns the position of the projectile on the Y-axis.
+	 * 
 	 * @return y
 	 */
 	@Basic @Raw
@@ -205,6 +212,7 @@ public class Projectile
 	
 	/**
 	 * This method returns the position of the projectile on the X-axis.
+	 * 
 	 * @return x
 	 */
 	@Basic @Raw
@@ -235,6 +243,7 @@ public class Projectile
 	 * This method returns if the projectile is still active.
 	 * 
 	 * @return true if hitworm is true and the projectile is within the boundries of the world and on a passable location.
+	 * 			| (hitWorm == true && this.getWorld().projectileInBounds(this) && this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius()))
 	 */
 	public boolean isActive() 
 	{		
@@ -248,13 +257,16 @@ public class Projectile
 	
 	
 	/**
-	 * This method 
+	 * This method loops over all the worms in world to check if the projectile has hit one
 	 * 
-	 * @pre World has to be initialized.
+	 * This can only happen if the projectile is in a world 
+	 * 		| this.getWorld() != null
 	 * 
+	 * @post
+	 * 		The boolean hitWorm gets set to true
+	 * 			| new.hitWorm = true
 	 * 
 	 */
-	//TODO
 	public void lookForWorms()
 	{
 		if (this.getWorld() != null) 
@@ -278,7 +290,10 @@ public class Projectile
 	 * This method returns the damage the selected weapon deals.
 	 * 
 	 * @return 80 if the selectedWeapon == "Bazooka"
+	 * 		| this.getWorld().currentWorm().getSelectedWeapon() == "Bazooka"
+	 * 
 	 * @return 20 if the selectedWeapon == "Rifle"
+	 * 		| this.getWorld().currentWorm().getSelectedWeapon() == "Rifle"
 	 */
 	public int damageWeapon()
 	{
@@ -296,12 +311,13 @@ public class Projectile
 	 * 
 	 * @param worm
 	 * 			The given worm.
+	 * 
 	 * @param damage
 	 * 			The given damage points.
 	 * 
 	 * @post 
 	 * 			Lowers the value of the HP of the given worm by the given damage points
-	 * 			|worm.getHP() - damage 				/<---Juist????????????????????????????????????????????????????????????????????
+	 * 			| new.worm.getHP() == worm.getHP() - damage 				
 	 */
 	public void damage(Worm worm, int damage)
 	{
@@ -335,14 +351,17 @@ public class Projectile
 	 * 
 	 * @param propulsionYield
 	 * 		The propulsionYield of the worm
+	 * 
 	 * @param projectile
 	 * 		The given projectile.
 	 * 
-	 * @pre The active projectile cannot be initialized
+	 * The active projectile cannot be initialized
 	 * 		|getWorld().getActiveProjectile() == null
 	 * 
-	 * @effect 
-	 * @post	//TODO effect & post
+	 * @post
+	 * 	The mass and force of the projectile get set to the values of the weapon	
+	 * 		| new.getMass() == 10
+	 * 		| new.getForce() == 1.5
 	 */
 	public void shootRifle(double propulsionYield, Projectile projectile) 
 	{
@@ -393,7 +412,23 @@ public class Projectile
 
 	
 	
-	//TODO
+	/**
+	 * This method launches a given bazooka projectile.
+	 * 
+	 * @param propulsionYield
+	 * 		The propulsionYield of the worm
+	 * 
+	 * @param projectile
+	 * 		The given projectile.
+	 * 
+	 * The active projectile cannot be initialized
+	 * 		| getWorld().getActiveProjectile() == null
+	 * 
+	 * @post
+	 * 	The mass and force of the projectile get set to the values of the weapon	
+	 * 		| new.getMass() == 300
+	 * 		| new.getForce() == 2.5 + 0.07*propulsionYield
+	 */
 	public void shootBazooka(double propulsionYield, Projectile projectile) 
 	{
 		if (getWorld().getActiveProjectile() == null)
@@ -401,9 +436,6 @@ public class Projectile
 			this.getWorld().addProjectile(projectile);
 			projectile.setMass(300);
 			projectile.setForce(2.5 + 0.07*propulsionYield);
-
-
-
 			Jump(propulsionYield);
 		}
 		else
@@ -447,8 +479,6 @@ public class Projectile
 	}
 
 	
-	
-	//TODO
 	/**
 	 * The method to make the worm jump to a new position
 	 * 
@@ -471,28 +501,21 @@ public class Projectile
 	 * The method to calculate the time the worm is in the air
 	 *                     
 	 * @return 	
-	 * 		- this.getTime() if the worm has enough AP
-	 * 			| !this.getCurrentAP == 0
-	 * 		- 0.0 if there is not enough AP left
-	 * 			| this.getCurrentAP == 0
+	 * 		this.getTime()
 	 * 
 	 * @post
-	 * 		If the worm still has AP, we set the force, velocity, density and time to their calculated values
-	 * 		| new.getForce() == (5*this.getCurrentAP() + this.getMass() * g)
+	 * 		We set the velocity, distance and time to the corresponding value
 	 * 		| new.getVelocity() == (this.getForce() / this.getMass() * 0.5)
 	 * 		| new.getDistance() == ((this.getVelocity² * sin(2*this.getAngle()) / g)
 	 * 		| new.getTime() == (this.getDistance() / (this.getVelocity() * cos(this.getAngle()) )
 	 * 
-	 * 		If the worm does not have enough AP, we set the amount of time in the air to zero
-	 * 		| new.getTime() == 0.0
 	 */
-	//TODO Pre?
 	public double JumpTime(double delta)
 	{
 		this.setVelocity(this.getForce()/this.getMass()*0.5);
 		this.setDistance(delta);
 		this.setTime(this.getDistance() / (this.getVelocity() * Math.cos(worm.getAngle()) ) );	
-		return this.getTime();
+			return this.getTime();
 	}
 
 	
@@ -504,7 +527,7 @@ public class Projectile
 	 * 		The given time.
 	 * 
 	 * @post The time the projectile is in the air is been set to the given value.
-	 * 		new.time = time
+	 * 		| new.time = time
 	 * 
 	 */
 	@Basic @Model
@@ -522,7 +545,7 @@ public class Projectile
 	 * 		The given distance.
 	 * 
 	 * @post The distance the projectile travels is been set to the given value.
-	 * 		new.distance = distance
+	 * 		| new.distance = distance
 	 * 
 	 */
 	@Basic @Model
@@ -569,6 +592,7 @@ public class Projectile
 	 * 		The given velocity.
 	 * 
 	 * @post The velocity by which the projectile travels is been set to the given value.
+	 * 			| new.getVelocity == velocity
 	 */
 	@Basic @Model
 	private void setVelocity(double velocity) 
@@ -577,7 +601,6 @@ public class Projectile
 	}   
 
 	
-	//TODO check
 	/**
 	 * Method to calculate the position of the worm while jumping
 	 *    
@@ -591,14 +614,6 @@ public class Projectile
 	 * 		- the array with the value of the original posX and posY (worm will not jump)
 	 * 			| this.getAngle() < 0
 	 * 			| this.getAngle() > Math.PI
-	 * 
-	 * @post
-	 * 		The worm will get a new position every moment inside the jump. This position is calculated by giving the parameters velocityX
-	 * 		and velocityY. These are used to calculate the position x and y.
-	 * 			- If the angle is between 0 and PI
-	 * 				| new.JumpStep == jumpstep
-	 * 			- If the angle is not between 0 and PI
-	 * 				| new.JumpStep == original
 	 * 			
 	 */
 	public double[] JumpStep(double DeltaT)
@@ -617,7 +632,6 @@ public class Projectile
 		}
 		else 
 		{
-
 			double[] original = new double[] {this.getPosX(),this.getPosY()};
 			return original;
 		}
@@ -650,7 +664,7 @@ public class Projectile
 	 * 			The Y-coordinate for the position in meters.
 	 * 
 	 * @return true if posX and posY are not negative- or positive infinity.
-	 * 
+	 * 				| (!(posX == Double.NEGATIVE_INFINITY) || !(posY == Double.NEGATIVE_INFINITY) || !(posX == Double.POSITIVE_INFINITY) || !(posY == Double.POSITIVE_INFINITY))
 	 * 
 	 * @throws IllegalArgumentException
 	 * 			If posX is positive infinity or negative infinity

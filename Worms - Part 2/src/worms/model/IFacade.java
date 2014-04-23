@@ -449,4 +449,46 @@ public interface IFacade {
 	 * Turns the given worm by the given angle.
 	 */
 	void turn(Worm worm, double angle);
+
+	/**
+	 * Checks if the worm if can shoot
+	 * 
+	 * @param worm
+	 * 		The worm we want to check
+	 * 
+	 * @return
+	 * 		True if the worm has enough AP and is standing on a passable spot
+	 */
+	boolean canShoot(Worm worm);
+
+	/**
+	 * Creates a team with the given parameters
+	 * 
+	 * @param world
+	 * 		The world we put this team in
+	 * 
+	 * @param name
+	 * 		The team name
+	 * 
+	 * @return
+	 * 		The team with these parameters
+	 */
+	Team createTeam(World world, String name);
+
+	/**
+	 * Creates a projectile with the given parameters
+	 * 
+	 * @param world
+	 * 		The world we put this team in
+	 * 
+	 * @param x
+	 * 		The posX of this projectile
+	 * 
+	 * @param y
+	 * 		The posY of this projectile
+	 * 
+	 * @return
+	 * 		The projectile with these parameters
+	 */
+	Projectile createProjectile(World world, double x, double y);
 }

@@ -410,7 +410,8 @@ public class World
 		double randomAngle = RandomGenerator.nextDouble() * 2 * Math.PI;
 		double randomRadius = RandomGenerator.nextDouble() * 0.75 + 0.25;
 
-		Worm worm = new Worm(this, randomPositionX, randomPositionY, randomRadius, randomAngle, "Eric");
+		
+		Worm worm = new Worm(this, randomPositionX, randomPositionY, randomRadius, randomAngle, "Press N to rename");
 		worm.setPosX(this.findAdjacentX(worm, randomPositionX));
 		worm.setPosY(this.findAdjacentY(worm, randomPositionY));
 
@@ -855,7 +856,23 @@ public class World
 		projectiles.remove(projectile);
 	}
 
-
+	/**
+	 * This method returns the distance between two positions
+	 * 
+	 * @param x
+	 * 		the posX of the first position
+	 * 
+	 * @param y
+	 * 		the posY of the first position
+	 * 
+	 * @param newX
+	 * 		the posX of the second position
+	 * 
+	 * @param newY
+	 * 		the posY of the first position
+	 * 
+	 * @return Math.sqrt(Math.pow((newX - x), 2) + Math.pow((newY -y), 2))
+	 */
 	public double getDistance(double x,double y,double newX,double newY){
 		return Math.sqrt(Math.pow((newX - x), 2) + Math.pow((newY -y), 2));
 	}
@@ -1095,7 +1112,8 @@ public class World
 	 * 			| new.getPassableMap() == map
 	 */
 	@Basic @Model
-	private void setPassableMap(boolean[][] map) throws IllegalArgumentException{
+	private void setPassableMap(boolean[][] map) throws IllegalArgumentException
+	{
 		if (map.length == 0)
 			throw new IllegalArgumentException("Empty map!");
 		else if (map[0].length == 0)
