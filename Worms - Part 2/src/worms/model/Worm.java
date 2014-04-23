@@ -18,11 +18,8 @@ package worms.model;
  *		------------																						          			  *
  *																																  *
  *		1. Make jump stop when hitting object or impassable 																      *
- *																																  *
- *		2. Worms don't spawn on the ground, but literally on an adjacent tile (is this allowed?) 								  *
- *				Can we change isAdjacent so only the positions beneath the worm are ok?											  *
  *																																  *																													
- *		3. Worms seem to be able to keep moving, even when AP is gone (Keeps taking smaller amounts (limit))				      *																	      *
+ *		2. Worms seem to be able to keep moving, even when AP is gone (Keeps taking smaller amounts (limit))				      *																	      *
  *			 																													  *
  *																																  *
  **********************************************************************************************************************************/
@@ -394,6 +391,8 @@ public class Worm
 	{
 		if ((0 > currentAP) && (currentAP > this.getMaxAP()))
 			throw new IllegalArgumentException("Not a valid value for AP");
+		if (currentAP == 0)
+			return false;
 		return true;
 	}
 
@@ -1333,19 +1332,17 @@ public class Worm
 	 * 
 	 * @post
 	 * 		The position gets set to the old position + the distance travelled
-	 * 			| new.getPosX() == getPosX() + distance[0]
-	 * 			| new.getPosY() == getPosY() + distance[1]
+	 * 			| new.getPosX() == getPosX() + this.getMoveDistance()[0]
+	 * 			| new.getPosY() == getPosY() + this.getMoveDistance()[1]
 	 */
 	public void move() throws IllegalArgumentException
 	{
 		if (!canMove())
 			throw new IllegalArgumentException("This move is not available");
 
-		double[] distance = this.getMoveDistance();
-
-		this.setCurrentAP(this.getCurrentAP() - this.calculateAPCostMove(distance));
-		this.setPosX(getPosX() + distance[0]);
-		this.setPosY(getPosY() + distance[1]);
+		this.setCurrentAP(this.getCurrentAP() - this.calculateAPCostMove(this.getMoveDistance()));
+		this.setPosX(getPosX() + this.getMoveDistance()[0]);
+		this.setPosY(getPosY() + this.getMoveDistance()[1]);
 		lookForFood();
 		fall();
 	}
@@ -1455,12 +1452,11 @@ public class Worm
 	 * 
 	 * @return
 	 * 		true if the worm has enough AP left to do this move
-	 * 			| isValidAP(this.getCurrentAP() - this.calculateAPCostMove(distance))
+	 * 			| isValidAP(this.getCurrentAP() - this.calculateAPCostMove(this.getMoveDistance()))
 	 */
 	public boolean canMove() 
 	{
-		double[] distance = this.getMoveDistance();
-		return (isValidAP(this.getCurrentAP() - this.calculateAPCostMove(distance)));
+		return (isValidAP(this.getCurrentAP() - this.calculateAPCostMove(this.getMoveDistance())));
 	}
 	
 	
