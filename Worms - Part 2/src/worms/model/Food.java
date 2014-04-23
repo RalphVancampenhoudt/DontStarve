@@ -54,10 +54,6 @@ public class Food
 		return 0.20;
 	}
 
-	public void setRadius(double radius)
-	{
-		this.radius = 0.20;
-	}
 
 	public boolean isActive() 
 	{

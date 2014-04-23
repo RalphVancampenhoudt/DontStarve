@@ -183,14 +183,9 @@ public class Projectile
 	 */
 	public void Jump(double delta) 
 	{
-
-		System.out.println("shizzle5");
 		double [] newPosition = this.JumpStep(this.JumpTime(delta));
 		this.setPosX(newPosition[0]);
 		this.setPosY(newPosition[1]);
-		System.out.println(newPosition[0]+ "endpro");
-		System.out.println(newPosition[1]+ "endpro");
-
 	}
 
 
@@ -274,24 +269,18 @@ public class Projectile
 	 */
 	public double[] JumpStep(double DeltaT)
 	{       
-		System.out.println("shizzle4");
 		double velocityX = this.getVelocity() * Math.cos(worm.getAngle());
 		double velocityY = this.getVelocity() * Math.sin(worm.getAngle());
 		double x = this.getPosX() + (velocityX * DeltaT);
 		double y = this.getPosY() + (velocityY * DeltaT - 0.5*g*Math.pow(DeltaT, 2));
 		double jumpstep[] = new double[] {x,y};
-		System.out.println("shizzle");
 		if (Util.fuzzyLessThanOrEqualTo(0, worm.getAngle()) && (Util.fuzzyLessThanOrEqualTo(worm.getAngle(), Math.PI)))
 		{
-			System.out.println("shizzle1");
 			return jumpstep;
-
 		}
 
 		else 
 		{
-			System.out.println("shizzle2");
-
 			double[] original = new double[] {this.getPosX(),this.getPosY()};
 			return original;
 		}

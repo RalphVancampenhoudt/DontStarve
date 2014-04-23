@@ -1,16 +1,32 @@
 package worms.model;
 
-//TODO: SHOOT DOESN'T WORK (projectiles don't seem to spawn and bazooka can never shoot) ------> HIGHEST PRIORITY
 
-//TODO: Make jump stop when hitting object or impassable ------> LOWER PRIORITY
+/**********************************************************************************************************************************
+ *	TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO  *
+ **********************************************************************************************************************************
+ *																																  *
+ *		HIGH PRIORITY																											  *
+ *		-------------																											  *
+ *		1. Shoot doesn't work (projectiles don't seem to spawn and bazooka can never shoot) 								 	  *
+ *																																  *
+ *		2. Worms have to be removed 																							  *
+ *																																  *
+ *																																  *
+ *		LOW PRIORITY																											  *
+ *		------------																											  *
+ *		1. DOCUMENTATION 																									      *
+ *			 	RALPH: Food, Projectile, Team, Facade																			  *
+ *				RUBEN: World																							          *
+ *																																  *
+ *		2. Make jump stop when hitting object or impassable 																      *
+ *																																  *
+ *		3. Worms don't spawn on the ground, but literally on an adjacent tile (is this allowed?) 								  *																	      *
+ *			 																													  *
+ *																																  *
+ **********************************************************************************************************************************/
 
-//TODO: Worms don't spawn on the ground, but literally on an adjacent tile (is this allowed?) ------> LOWER PRIORITY
 
-//TODO: Worms have to be removed ------> HIGHEST PRIORITY
 
-//TODO: DOCUMENTATION ------> HIGHEST PRIORITY
-	//RALPH: Food, Projectile, Team, Facade
-	//RUBEN: Worm, World
 
 /**
  * A class of worms involving a position consisting of an X- and Y-coordinate, an angle,
@@ -21,7 +37,19 @@ package worms.model;
  * 
  * @invar isValidRadius(getRadius())
  * 
- * @invar isValid
+ * @invar isValidTurn(getAngle())
+ * 
+ * @invar isValidName(getName())
+ * 
+ * @invar isValidPosition(getPosX, getPosY)
+ * 
+ * @invar isValidMass(getMass())
+ * 
+ * @invar isValidAP(getCurrentAP())
+ * 
+ * @invar isValidHP(getHP())
+ * 
+ * @invar isValidPropulsionYield(propulsionYield)
  */
 
 import java.lang.Math;
@@ -308,8 +336,6 @@ public class Worm
 	 * 			| posY == Double.NEGATIVE_INFINITY
 	 * 			| posX == Double.POSITIVE_INFINITY
 	 * 			| posY == Double.POSITIVE_INFINITY
-	 * 		If the position of the worm is impassable
-	 * 			| !world.isPassable(posX, posY, this.getRadius())
 	 */
 	public boolean isValidPosition(double posX, double posY) throws IllegalArgumentException 
 	{
@@ -405,6 +431,18 @@ public class Worm
 	 * 		We use the values of JumpStep and JumpTime to calculate the value of the new position the worm will be in and we drain all his AP
 	 * 			| new.getPosX() == newPosition[0]
 	 * 			| new.getPosY() == newPosition[1]
+	 * 
+	 * @effect 
+	 * 		lookForFood() 
+	 * 			sees if the worm is going to consume a piece of food
+	 * 
+	 * @effect
+	 * 		fall() 
+	 * 			sees if the worm can fall from the end location down to the next adjacent spot
+	 * 
+	 * @effect
+	 * 		destroy() 
+	 * 			sees if the worm has 0 HP and should be destroyed
 	 */
 	public void Jump() 
 	{
@@ -420,6 +458,13 @@ public class Worm
 		destroy();
 	}
 
+	/**
+	 * Method to check whether the worm can jump from this location
+	 * 
+	 * @return
+	 * 		true if the worm has more than 0 AP and is standing in a passable location
+	 * 			| this.getCurrentAP() > 0 && this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius())
+	 */
 	public boolean canJump()
 	{
 		if (this.getCurrentAP() > 0 && this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius()))
@@ -504,22 +549,11 @@ public class Worm
 
 		else 
 		{
-			//double[] original = new double[] {this.getPosX(),this.getPosY()};
 			DeltaT = 0;
 			return jumpstep;
 		}
 
-
-
-
 	}
-
-
-
-
-
-
-
 
 	/**
 	 * This method recalls the value of the maximum amount of AP a worm can have, namely the mass a worm has rounded upwards to the next integer
@@ -899,12 +933,9 @@ public class Worm
 	/**
 	 * This method sets the value for the selected weapon of a worm
 	 * 
-	 * @param selectedWeapon
-	 * 		the selected weapon of this worm 
-	 * 
 	 * @post
-	 * 		Sets the value of selected weapon to the starting value
-	 * 		| new.getSelectedWeapon() == selectedWeapon
+	 * 		Sets the value of selected weapon to the weapon on index in weapons
+	 * 		| new.getSelectedWeapon() == weapons.get(index)
 	 */
 	@Model @Basic
 	public void setSelectedWeapon()
@@ -946,6 +977,7 @@ public class Worm
 	 * 
 	 * @return
 	 * 		true if the value of currentHP is a valid one and the worm is in the world boundaries
+	 * 			| isValidHP(this.getHP()) && this.getWorld().wormInBounds(this)
 	 */
 	public boolean isAlive() 
 	{
@@ -962,12 +994,23 @@ public class Worm
 	 * 		Sets the value of currentHP to the value of HP if isValidHP(HP) returns true
 	 * 			| if (isValidHP(HP) == true
 	 * 				| new.getHP() == HP
+	 * 
+	 * @post 
+	 * 		Sets the value of currentHP to 0 if HP < 0
+	 * 			| if (HP < 0)
+	 * 				| new.getHP() == 0
+	 * 
+	 * @post
+	 * 		Sets the value of currentHP to this.getMaxHP() if hp > this.getMaxHP()
+	 * 			| if (HP > this.getMaxHP()
+	 * 				| new.getCurrentHP() == this.getMaxHP()
 	 */
 	@Basic @Model
 	public void setHP(int HP) 
 	{
 		if (isValidHP(HP))
 			this.currentHP = HP;
+		
 		if (HP < 0)
 		{
 			this.currentHP = 0;
@@ -978,26 +1021,6 @@ public class Worm
 			this.currentHP = this.getMaxHP();
 	}
 
-	/**
-	 * Method to inspect whether the amount of current HP is a valid amount
-	 * 
-	 * @param hp
-	 * 		The current amount of hp of the worm
-	 * 
-	 * @return
-	 * 		true if the value of currentAP is a valid one
-	 * 			| hp >= 0
-	 * 			| hp <= getMaxHP()
-	 * 
-	 */
-	public boolean isValidHP(int hp) 
-	{
-		if (hp < 0)
-			return false;
-		if (hp > this.getMaxHP())
-			return false;
-		return true;
-	}
 
 	/*
 	 * This method returns the world this worm is in
@@ -1185,6 +1208,18 @@ public class Worm
 		food.destroy();
 	}
 
+	/**
+	 * Method to loop over all the food in this world and check whether the worm is overlapping with it, making it eat and grow
+	 * 
+	 * If the worm has a world, we check every food in that world by looping through ArrayList fodder in World
+	 * 		When a worm is overlapping with a food, the worm eats it
+	 * 			| if (this.getWorld() != null)
+	 * 				| if (World.isOverlapping(getPosX(), getPosY(), getRadius(), food.getPosX(), food.getPosY(), food.getRadius())
+	 * 					| consume(food)
+	 * 
+	 * @effect
+	 * 		The worm grows with 10% and the food gets destroyed
+	 */
 	private void lookForFood() 
 	{
 		if (this.getWorld() != null) 
@@ -1198,6 +1233,21 @@ public class Worm
 		}
 	}
 
+	/**
+	 * Method to destroy the worm if his HP fall under 0
+	 * 
+	 * @post
+	 * 		Worm gets removed from world
+	 * 			| world.amountOfWorms() = world.amountOfWorms() - 1
+	 * 
+	 * @post 
+	 * 		The worm's references get removed
+	 * 			| new.getWorld() == null
+	 * 			| new.getPosX() == 0
+	 * 			| new.getPosY() == 0
+	 * 			| new.getRadius() == 0
+	 * 			| new.getAngle() == 0
+	 */
 	public void destroy()
 	{
 		if (!isAlive())
@@ -1211,24 +1261,66 @@ public class Worm
 		}
 	}
 
-	public void addToTeam(Team team) throws IllegalArgumentException
+	/**
+	 * Adds this worm to a team
+	 * 
+	 * @param team
+	 * 		The team we want to add the worm in
+	 * 
+	 * If the team exists, we add the worm to this team
+	 * 		| if (team != null)
+	 * 			| team.addWorm(this)
+	 * 
+	 * @effect
+	 * 	 addWorm(this) in class Team
+	 */
+	public void addToTeam(Team team)
 	{
 		if (team != null)
 			team.addWorm(this);
 	}
 
+	
+	/**
+	 * Method to check whether the worm can fall down
+	 * 
+	 * @return
+	 * 		true if the worm is still alive and on a passable spot which is not adjacent
+	 * 			| this.isAlive() && this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius()) && !this.getWorld().isAdjacent(this.getPosX(), this.getPosY(), this.getRadius())
+	 */
 	public boolean canFall() 
 	{
 		return this.isAlive() && this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius()) && !this.getWorld().isAdjacent(this.getPosX(), this.getPosY(), this.getRadius());
 	}
 
+	/**
+	 * Method to make the worm fall down to the next adjacent location, losing 3HP per fallen meter
+	 * 
+	 * While this.canFall() is true, the worm will fall down 1% of his radius and lose 3HP per fallen meter
+	 * 		| while (this.canFall())
+	 * 			| this.setPosY(this.getPosY() - 0.01*this.getRadius())
+	 * 			| this.setHP((int) Math.floor(this.getHP() - 3*(distanceFallen)))
+	 * 
+	 * Afterwards, he will check if he landed on food and try to eat it
+	 * 		| lookForFood()
+	 * 
+	 * @post
+	 * 		posY gets set to posY - 0.01 * radius
+	 * 			| new.getPosY() == getPosY() - 0.01 * getRadius()
+	 * 
+	 * @post 
+	 * 		HP gets set to HP - 3 * distanceFallen
+	 * 			| new.getHP() == getHP() - 3 * distanceFallen
+	 * 
+	 */
 	public void fall() 
 	{
 		double begin = this.getPosY();
 		while (this.canFall())
 		{
 			this.setPosY(this.getPosY() - 0.01*this.getRadius());
-			this.setHP((int) Math.floor(this.getHP() - 3*(begin - this.getPosY())));
+			double distanceFallen = begin - this.getPosY();
+			this.setHP((int) Math.floor(this.getHP() - 3*(distanceFallen)));
 		}
 		lookForFood();
 	}
@@ -1261,7 +1353,17 @@ public class Worm
 	}
 
 	
-	
+	/**
+	 * Method to retrieve the maximal distance the worm can move at a time 
+	 * 
+	 * The working of this method is best described inside the method itself to make sure every part is understandable
+	 * 
+	 * @return
+	 * 		Output (a matrix of 2 coordinates that will be the farthest location available that is also adjacent)
+	 * 			| output[0] = bestX - this.getPosX()
+	 *			| output[1] = bestY - this.getPosY()
+	 * 		
+	 */
 	protected double[] getMoveDistance() 
 	{
 		//Test different values for X, Y and D
@@ -1379,7 +1481,7 @@ public class Worm
 	 * 			| hp < 0 
 	 * 			| hp > this.getMaxHP()
 	 */
-	public boolean isValidHP(double hp) throws IllegalArgumentException 
+	public boolean isValidHP(int hp) throws IllegalArgumentException 
 	{
 		if ((0 > hp) && (hp > this.getMaxHP()))
 			throw new IllegalArgumentException("Not a valid value for HP");
