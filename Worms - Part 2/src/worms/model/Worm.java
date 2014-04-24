@@ -11,7 +11,11 @@ package worms.model;
  *				Probably because Jump, jumpstep and jumptime are wrong since it shows the original position						  *
  *				it adds the projectile and removes it, but the projectile is hidden behind worm									  *
  *					QUESTION: do we have to change the jump for worm too then (is working?)										  *
- *						COULD THIS SOLVE LOW PRIORITY NUMBER 1?																	  *		
+ *						COULD THIS SOLVE LOW PRIORITY NUMBER 1 AND LOW PRIORITY NUMBER 2?										  *
+ *																																  *
+ *		2. wormInBounds always returns true when jumping out of the world														  *
+ *																																  *
+ *		3. new team gets instantly removed because there are no worms in it yet													  *		
  *																														  		  *
  *																																  *
  *		LOW PRIORITY																											  *
@@ -391,8 +395,6 @@ public class Worm
 	{
 		if ((0 > currentAP) && (currentAP > this.getMaxAP()))
 			throw new IllegalArgumentException("Not a valid value for AP");
-		if (currentAP == 0)
-			return false;
 		return true;
 	}
 
@@ -890,42 +892,42 @@ public class Worm
 	 * 									   PART 2 ADDITIONS									     *
 	 * 																						     *       
 	 *********************************************************************************************/
-	/*
+	/**
 	 * The current amount of HP a worm has
 	 */
 	public int currentHP;
 
-	/*
+	/**
 	 * A boolean that indicates whether the object is inside of the world boundaries
 	 */
 	public boolean outOfBounds = false;
 
-	/*
+	/**
 	 * The list of weapons a worm has (now only a Bazooka and a Rifle)
 	 */
 	public List<String> weapons = Arrays.asList("Bazooka", "Rifle");
 
-	/*
+	/**
 	 * The selected weapon of this worm (starting at Bazooka and cycling)
 	 */
 	public String selectedWeapon = "Bazooka";
 
-	/*
+	/**
 	 * The world this worm is in
 	 */
 	public World world;
 
-	/*
+	/**
 	 * The team this worm is in
 	 */
 	public Team team;
 
-	/*
+	/**
 	 * The projectile this worm is shooting
 	 */
 	public Projectile projectile;
 
-	/*
+	/**
 	 * The index to determine which weapon is selected
 	 */
 	private int index = 0;
@@ -944,7 +946,7 @@ public class Worm
 	}
 
 
-	/*
+	/**
 	 * This method recalls the value of selectedWeapon
 	 */
 	@Basic @Raw
@@ -953,7 +955,7 @@ public class Worm
 		return selectedWeapon;
 	}
 
-	/*
+	/**
 	 * This method recalls the value of MaxHP
 	 *   | MaxHP == (int) Math.ceil(this.getMass())
 	 */
@@ -963,7 +965,7 @@ public class Worm
 		return (int)Math.ceil(this.getMass());
 	}
 
-	/*
+	/**
 	 * This method recalls the value of currentHP
 	 */
 	@Basic @Raw
@@ -1022,7 +1024,7 @@ public class Worm
 	}
 
 
-	/*
+	/**
 	 * This method returns the world this worm is in
 	 */
 	@Basic @Raw 
@@ -1031,7 +1033,7 @@ public class Worm
 		return world;
 	}
 
-	/*
+	/**
 	 * This method returns the team this worm is in
 	 */
 	@Basic @Raw
@@ -1071,7 +1073,7 @@ public class Worm
 		this.team = team;
 	}
 
-	/*
+	/**
 	 * This method selects the next weapon by increasing the index-number of the ArrayList weapons
 	 * 
 	 * @post
@@ -1094,7 +1096,7 @@ public class Worm
 			weapons.get(index ++);		
 	}
 
-	/*
+	/**
 	 * This method shoots a projectile with a certain propulsion yield
 	 * 
 	 * @param propulsionYield
@@ -1140,7 +1142,7 @@ public class Worm
 			if (this.getSelectedWeapon() == "Rifle")
 			{
 				Projectile projectile = new Projectile(this);
-				projectile.shootRifle(propulsionYield, projectile);
+				projectile.shootRifle(projectile);
 				this.setCurrentAP(this.getCurrentAP() - 10);
 			}
 		}
@@ -1148,7 +1150,7 @@ public class Worm
 			throw new IllegalArgumentException("This worm can not shoot");
 	}
 
-	/*
+	/**
 	 * This method starts the next turn and the worm regains all his AP and 10 HP
 	 * 
 	 * @post
@@ -1167,7 +1169,7 @@ public class Worm
 	}
 
 
-	/*
+	/**
 	 * this method determines whether the worm can shoot or not
 	 * 
 	 * @return
@@ -1197,7 +1199,7 @@ public class Worm
 			return false;
 	}
 
-	/*
+	/**
 	 * This method consumes food when the worm collides with it, making the worm grow 10%
 	 * 
 	 * @post 
@@ -1255,6 +1257,8 @@ public class Worm
 		{
 			this.getWorld().removeWorm(this);
 			this.setWorld(null);
+			if (this.getTeam() != null)
+				this.getTeam().removeAsWorm(this);
 		}
 	}
 
@@ -1340,9 +1344,10 @@ public class Worm
 		if (!canMove())
 			throw new IllegalArgumentException("This move is not available");
 
-		this.setCurrentAP(this.getCurrentAP() - this.calculateAPCostMove(this.getMoveDistance()));
-		this.setPosX(getPosX() + this.getMoveDistance()[0]);
-		this.setPosY(getPosY() + this.getMoveDistance()[1]);
+		double[] distance = this.getMoveDistance();
+		this.setCurrentAP(this.getCurrentAP() - this.calculateAPCostMove(distance));
+		this.setPosX(getPosX() + distance[0]);
+		this.setPosY(getPosY() + distance[1]);
 		lookForFood();
 		fall();
 	}
@@ -1456,7 +1461,8 @@ public class Worm
 	 */
 	public boolean canMove() 
 	{
-		return (isValidAP(this.getCurrentAP() - this.calculateAPCostMove(this.getMoveDistance())));
+		double[] distance = this.getMoveDistance();
+		return (isValidAP(this.getCurrentAP() - this.calculateAPCostMove(distance)) && this.isAlive());
 	}
 	
 	

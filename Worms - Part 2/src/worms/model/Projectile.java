@@ -247,9 +247,8 @@ public class Projectile
 	 */
 	public boolean isActive() 
 	{		
-		if (hitWorm == true && this.getWorld().projectileInBounds(this) && this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius()))
+		if (hitWorm == false && this.getWorld().projectileInBounds(this) && this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius()))
 			return true;
-		lookForWorms();
 		return false;
 	}
 
@@ -349,8 +348,6 @@ public class Projectile
 	/**
 	 * This method launches a given rifle projectile.
 	 * 
-	 * @param propulsionYield
-	 * 		The propulsionYield of the worm
 	 * 
 	 * @param projectile
 	 * 		The given projectile.
@@ -363,19 +360,19 @@ public class Projectile
 	 * 		| new.getMass() == 10
 	 * 		| new.getForce() == 1.5
 	 */
-	public void shootRifle(double propulsionYield, Projectile projectile) 
+	public void shootRifle(Projectile projectile) 
 	{
 		if (getWorld().getActiveProjectile() == null)
 		{
 			this.getWorld().addProjectile(projectile);
 			projectile.setMass(10);
 			projectile.setForce(1.5);
-			Jump(propulsionYield);
+			Jump(0.0001);
 		}
 		else
 		{
 			getWorld().getActiveProjectile().destroy();
-			shootRifle(propulsionYield, projectile);
+			shootRifle(projectile);
 		}
 
 	}
@@ -436,7 +433,7 @@ public class Projectile
 			this.getWorld().addProjectile(projectile);
 			projectile.setMass(300);
 			projectile.setForce(2.5 + 0.07*propulsionYield);
-			Jump(propulsionYield);
+			Jump(0.0001);
 		}
 		else
 		{
@@ -479,43 +476,40 @@ public class Projectile
 	}
 
 	
-	/**
-	 * The method to make the worm jump to a new position
-	 * 
-	 * @post
-	 * 		We use the values of JumpStep and JumpTime to calculate the value of the new position the worm will be in and we drain all his AP
-	 * 		| new.getPosX() == newPosition[0]
-	 * 		| new.getPosY() == newPosition[1]
-	 */
-	public void Jump(double delta) 
+	//TODO
+	public void Jump(double delta)
 	{
-
-		double [] newPosition = this.JumpStep(this.JumpTime(delta));
-		this.setPosX(newPosition[0]);
-		this.setPosY(newPosition[1]);
+	 JumpTime(delta);
+	 System.out.println("whoops");
+		//TODO: return in console: yolo, whoops, yolo, yolo, whoops (wtf?)
 	}
 
-
-
-	/**
-	 * The method to calculate the time the worm is in the air
-	 *                     
-	 * @return 	
-	 * 		this.getTime()
-	 * 
-	 * @post
-	 * 		We set the velocity, distance and time to the corresponding value
-	 * 		| new.getVelocity() == (this.getForce() / this.getMass() * 0.5)
-	 * 		| new.getDistance() == ((this.getVelocity² * sin(2*this.getAngle()) / g)
-	 * 		| new.getTime() == (this.getDistance() / (this.getVelocity() * cos(this.getAngle()) )
-	 * 
-	 */
+	//TODO
 	public double JumpTime(double delta)
 	{
-		this.setVelocity(this.getForce()/this.getMass()*0.5);
-		this.setDistance(delta);
-		this.setTime(this.getDistance() / (this.getVelocity() * Math.cos(worm.getAngle()) ) );	
-			return this.getTime();
+		System.out.println("yolo");
+		double X = 0;
+		double Y = 0;
+		double[] jumpStepResult = new double[2];
+		double jumpTime = 0;
+		while (hitWorm == false && getWorld().isPassable(X, Y, worm.getRadius()))
+				{
+					jumpStepResult = this.JumpStep(jumpTime);
+					X = jumpStepResult[0];
+					Y = jumpStepResult[1];
+					jumpTime += delta;
+					jumpStepResult = this.JumpStep(jumpTime);
+					X = jumpStepResult[0];
+					Y = jumpStepResult[1];
+					this.setPosX(X);
+					System.out.println(this.getPosX());
+					System.out.println(worm.getPosX());
+					this.setPosY(Y);
+					System.out.println(this.getPosY());
+					System.out.println(worm.getPosY());
+					jumpTime += delta;
+				}
+		return jumpTime;
 	}
 
 	
@@ -600,24 +594,10 @@ public class Projectile
 		this.velocity = velocity;
 	}   
 
-	
-	/**
-	 * Method to calculate the position of the worm while jumping
-	 *    
-	 * @param DeltaT
-	 * 		The amount of time that has passed between two points in the jump
-	 * 
-	 * @return 
-	 * 		- the array jumpstep with the values for x and y if the angle is between 0 and PI
-	 * 			| !this.getAngle() < 0
-	 * 			| !this.getAngle() > Math.PI
-	 * 		- the array with the value of the original posX and posY (worm will not jump)
-	 * 			| this.getAngle() < 0
-	 * 			| this.getAngle() > Math.PI
-	 * 			
-	 */
+	//TODO
 	public double[] JumpStep(double DeltaT)
 	{       
+		System.out.println("jumpstep");
 		double velocityX = this.getVelocity() * Math.cos(worm.getAngle());
 		double velocityY = this.getVelocity() * Math.sin(worm.getAngle());
 		double x = this.getPosX() + (velocityX * DeltaT);
@@ -625,16 +605,7 @@ public class Projectile
 		
 		double jumpstep[] = new double[] {x,y};
 		
-		if (Util.fuzzyLessThanOrEqualTo(0, worm.getAngle()) && (Util.fuzzyLessThanOrEqualTo(worm.getAngle(), Math.PI)))
-		{
-			return jumpstep;
-
-		}
-		else 
-		{
-			double[] original = new double[] {this.getPosX(),this.getPosY()};
-			return original;
-		}
+		return jumpstep;
 
 	}
 

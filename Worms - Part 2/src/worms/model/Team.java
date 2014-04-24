@@ -31,6 +31,8 @@ public class Team
 	 * The list of the members in the team.
 	 */
 	private ArrayList<Worm> teamMembers;
+	
+	private boolean initiated ;
 
 
 
@@ -53,15 +55,18 @@ public class Team
 	 * 			|!isValidName(name)
 	 *
 	 * @post Name of the team is set to the given valid.
-	 * 			|new.name = name
+	 * 			|new.name == name
 	 * 
 	 * 
 	 * @post World of the team is set to the given world.
-	 *			|new.world = world
+	 *			|new.world == world
 	 *
 	 *
 	 * @post A new arrayList of team members is initialized 
-	 * 			|new.teamMembers = new ArrayList<Worm>();
+	 * 			|new.teamMembers == new ArrayList<Worm>();
+	 * 
+	 * @post We say the team is initiated
+	 * 			|new.initiated == true
 	 */
 
 	public Team(String name, World world) 
@@ -70,6 +75,7 @@ public class Team
 			throw new IllegalArgumentException("Name not valid");
 		this.name = name;
 		this.world = world;
+		initiated = true;
 		this.teamMembers = new ArrayList<Worm>();
 	}
 
@@ -106,13 +112,14 @@ public class Team
 	 * 
 	 * @return teamMembers.get(index)
 	 * 
-	 * @throws IndexOutOfBoundsException
 	 */
 	@Basic @Raw
-	public Worm getWorm(int index) throws IndexOutOfBoundsException 
+	public Worm getWorm(int index)
 	{
-		if (index < 1 || index > getAmountOfWorms())
-			throw new IndexOutOfBoundsException();
+		if (index < 0)
+			index = 0;
+		if (index > getAmountOfWorms() )
+			index = 0;
 		return teamMembers.get(index);
 	}
 
@@ -271,6 +278,7 @@ public class Team
 		assert (worm != null) && (worm.getTeam() == this);
 		assert !isMember(worm);
 		teamMembers.add(worm);
+		initiated = false;
 	}
 
 
@@ -313,8 +321,8 @@ public class Team
 		return name.matches("[A-Z][a-zA-Z0-9\\s'\"]+");
 	}
 
-	
-	
+
+
 	
 	/**
 	 * This method verifies if this team is active.
@@ -324,13 +332,11 @@ public class Team
 	 */
 	public boolean isActive()
 	{
-		if (teamMembers.size() != 0)
+		if (teamMembers.size() != 0 || initiated == true)
 			return true;
 		return false;
 	}
 
-	
-	
 	
 	 /**
 	  * This method removes a team from the world.

@@ -110,8 +110,8 @@ public class World
 	 * 
 	 * @post
 	 * 		The dimensions get set
-	 * 		| new.worldHeight == worldHeight
-	 * 		| new.worldWidth == worldWidth
+	 * 		| new.getWorldHeight() == worldHeight
+	 * 		| new.getWorldWidth() == worldWidth
 	 * 
 	 * @post
 	 * 		The passable map gets set
@@ -128,8 +128,8 @@ public class World
 		this.fodder = new ArrayList<Food>();
 		this.projectiles = new ArrayList<Projectile>();
 		this.teams = new ArrayList<Team>();
-		this.worldHeight = worldHeight;
-		this.worldWidth = worldWidth;
+		this.setWorldHeight(worldHeight);
+		this.setWorldWidth(worldWidth);
 		this.setPassableMap(passableMap);
 		RandomGenerator = random;
 	}
