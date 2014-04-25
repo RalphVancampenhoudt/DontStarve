@@ -128,7 +128,8 @@ public class Projectile
 			this.setPosX(worm.getPosX() + Math.cos(worm.getAngle() * worm.getRadius()));
 			this.setPosY(worm.getPosY() + Math.sin(worm.getAngle() * worm.getRadius()));
 		}
-		else throw new IllegalArgumentException("Not a valid position for projectile");
+		else 
+			throw new IllegalArgumentException("Not a valid position for projectile");
 		this.setWorld(worm.getWorld());
 	}
 
@@ -226,11 +227,11 @@ public class Projectile
 	/**
 	 * This method returns the radius of the projectile in meters.
 	 * 
-	 * @return Math.pow(this.getMass()/(density*(4.0/3.0)*Math.PI), 1.0/3.0)
+	 * @return Math.pow(this.getMass()/(density*(4/3)*Math.PI), 1/3)
 	 */
 	public double getRadius() 
 	{
-		return Math.pow(this.getMass()/(density*(4.0/3.0)*Math.PI), 1.0/3.0);
+		return Math.pow(this.getMass()/(density*(4/3)*Math.PI), 1/3);
 	}
 
 

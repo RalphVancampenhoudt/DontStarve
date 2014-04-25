@@ -1222,6 +1222,7 @@ public class Worm
 		if (!canMove())
 			throw new IllegalArgumentException("This move is not available");
 
+		
 		if (this.getCurrentAP() > 0)
 		{
 			double[] distance = this.getMoveDistance();

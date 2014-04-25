@@ -32,7 +32,10 @@ public class Team
 	 */
 	private ArrayList<Worm> teamMembers;
 
-	private boolean initiated ;
+	/**
+	 * A boolean to determine whether the team has just been created or not
+	 */
+	private boolean initiatedTeam ;
 
 
 
@@ -75,7 +78,7 @@ public class Team
 			throw new IllegalArgumentException("Name not valid");
 		this.name = name;
 		this.world = world;
-		initiated = true;
+		initiatedTeam = true;
 		this.teamMembers = new ArrayList<Worm>();
 	}
 
@@ -278,7 +281,7 @@ public class Team
 		assert (worm != null) && (worm.getTeam() == this);
 		assert !isMember(worm);
 		teamMembers.add(worm);
-		initiated = false;
+		initiatedTeam = false;
 	}
 
 
@@ -332,7 +335,7 @@ public class Team
 	 */
 	public boolean isActive()
 	{
-		if (teamMembers.size() != 0 || initiated == true)
+		if (teamMembers.size() != 0 || initiatedTeam == true)
 			return true;
 		return false;
 	}
