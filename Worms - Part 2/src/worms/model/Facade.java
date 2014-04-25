@@ -21,14 +21,14 @@ public class Facade implements IFacade
 	}
 
 
-	
+
 	@Override
 	public boolean canTurn(Worm worm, double angle) 
 	{
 		return worm.isValidTurn(angle);
 	}
 
-	
+
 	@Override
 	public void turn(Worm worm, double angle) throws ModelException
 	{
@@ -43,42 +43,42 @@ public class Facade implements IFacade
 	}
 
 
-	
+
 	@Override
 	public double[] getJumpStep(Worm worm, double t) 
 	{
 		return worm.JumpStep(t);
 	}
 
-	
+
 	@Override
 	public double getX(Worm worm) 
 	{
 		return worm.getPosX();
 	}
 
-	
+
 	@Override
 	public double getY(Worm worm) 
 	{
 		return worm.getPosY();
 	}
 
-	
+
 	@Override
 	public double getOrientation(Worm worm) 
 	{
 		return worm.getAngle();
 	}
 
-	
+
 	@Override
 	public double getRadius(Worm worm) 
 	{
 		return worm.getRadius();
 	}
 
-	
+
 	@Override
 	public void setRadius(Worm worm, double newRadius) throws ModelException
 	{
@@ -87,35 +87,35 @@ public class Facade implements IFacade
 		worm.setRadius(newRadius);  
 	}
 
-	
+
 	@Override
 	public double getMinimalRadius(Worm worm)
 	{
 		return worm.minRadius; 
 	}
 
-	
+
 	@Override
 	public int getActionPoints(Worm worm) 
 	{
 		return worm.getCurrentAP();
 	}
 
-	
+
 	@Override
 	public int getMaxActionPoints(Worm worm) 
 	{
 		return worm.getMaxAP();
 	}
 
-	
+
 	@Override
 	public String getName(Worm worm) 
 	{
 		return worm.getName();
 	}
 
-	
+
 	@Override
 	public void rename(Worm worm, String newName) 
 	{
@@ -130,7 +130,7 @@ public class Facade implements IFacade
 		}
 	}
 
-	
+
 	@Override
 	public double getMass(Worm worm) 
 	{
@@ -146,65 +146,65 @@ public class Facade implements IFacade
 	 * 																						     *       
 	 *********************************************************************************************/
 
-	
+
 	@Override
 	public Collection<Worm> getWorms(World world) 
 	{
 		return world.getWorms();
 	}
 
-	
+
 	@Override
 	public String getWinner(World world) 
 	{
 		return world.getWinner();
 	}
 
-	
-	
+
+
 	@Override
 	public Collection<Food> getFood(World world) 
 	{
 		return world.getFodder();
 	}
 
-	
+
 	@Override
 	public double getX(Food food) 
 	{
 		return food.getPosX();
 	}
 
-	
+
 	@Override
 	public double getY(Food food) 
 	{
 		return food.getPosY();
 	}
 
-	
+
 	@Override
 	public double getRadius(Food food) 
 	{
 		return food.getRadius();
 	}
 
-	
-	
+
+
 	@Override
 	public String getSelectedWeapon(Worm worm) 
 	{
 		return worm.getSelectedWeapon();
 	}
 
-	
+
 	@Override
 	public Worm getCurrentWorm(World world) 
 	{
 		return world.currentWorm();
 	}
 
-	
+
 	@Override
 	public void addEmptyTeam(World world, String newName) throws ModelException
 	{
@@ -219,36 +219,36 @@ public class Facade implements IFacade
 		}
 	}
 
-	
+
 	@Override
 	public void addNewWorm(World world) 
 	{
 		world.addWorm();
 	}
 
-	
+
 	@Override
 	public void addNewFood(World world) 
 	{
 		world.addFood();
 	}
 
-	
-	
+
+
 	@Override
 	public void startGame(World world) 
 	{
 		world = new World(world.getWorldHeight(), world.getWorldWidth(), world.getPassableMap(), random);
 	}
 
-	
+
 	@Override
 	public boolean isGameFinished(World world) 
 	{
 		return world.isFinished();
 	}
 
-	
+
 	@Override
 	public void startNextTurn(World world) 
 	{
@@ -257,29 +257,29 @@ public class Facade implements IFacade
 		world.currentWorm().setHP(world.currentWorm().getHP() + 10);			
 	}
 
-	
+
 	@Override
 	public boolean isImpassable(World world, double randomizedX, double randomizedY, double testRadius) 
 	{
 		return world.isPassable(randomizedX, randomizedY, testRadius);
 	}
 
-	
-	
+
+
 	@Override
 	public boolean isAdjacent(World world, double randomizedX, double randomizedY, double testRadius) 
 	{
 		return world.isAdjacent(randomizedX, randomizedY, testRadius);
 	}
 
-	
+
 	@Override
 	public double getJumpTime(Worm worm, double jumpTimeStep) 
 	{
-		return worm.JumpTime();
+		return worm.JumpTime(jumpTimeStep);
 	}
 
-	
+
 	@Override
 	public String getTeamName(Worm worm) 
 	{
@@ -288,56 +288,56 @@ public class Facade implements IFacade
 		return null;
 	}
 
-	
+
 	@Override
 	public int getMaxHitPoints(Worm worm) 
 	{
 		return worm.getMaxHP();
 	}
 
-	
+
 	@Override
 	public int getHitPoints(Worm worm) 
 	{
 		return worm.getHP();
 	}
 
-	
+
 	@Override
 	public void jump(Worm worm, double jumpTimeStep) 
 	{
-		worm.Jump();
+		worm.Jump(jumpTimeStep);
 	}
 
-	
+
 	@Override
 	public boolean isAlive(Worm worm) 
 	{
 		return worm.isAlive();
 	}
 
-	
+
 	@Override
 	public boolean canMove(Worm worm) 
 	{
 		return worm.canMove();
 	}
 
-	
+
 	@Override
 	public boolean canFall(Worm worm) 
 	{
 		return worm.canFall();
 	}
 
-	
+
 	@Override
 	public void fall(Worm worm) 
 	{
 		worm.fall();
 	}
 
-	
+
 	@Override
 	public void move(Worm worm) throws ModelException
 	{
@@ -351,7 +351,7 @@ public class Facade implements IFacade
 		}
 	}
 
-	
+
 	@Override
 	public void selectNextWeapon(Worm worm) 
 	{
@@ -359,7 +359,7 @@ public class Facade implements IFacade
 		worm.setSelectedWeapon();
 	}
 
-	
+
 	@Override
 	public void shoot(Worm worm, int propulsionYield) throws ModelException
 	{
@@ -374,7 +374,7 @@ public class Facade implements IFacade
 
 	}
 
-	
+
 	@Override
 	public Projectile getActiveProjectile(World world) 
 	{
@@ -442,7 +442,7 @@ public class Facade implements IFacade
 		Projectile projectile = new Projectile(world.currentWorm());
 		return projectile;
 	}
-	
+
 	@Override
 	public Team createTeam(World world, String name)
 	{
@@ -454,7 +454,7 @@ public class Facade implements IFacade
 	{
 		return new World(width, height, passableMap, random);
 	}
-	
+
 	@Override
 	public boolean canShoot(Worm worm)
 	{

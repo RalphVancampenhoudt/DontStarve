@@ -24,78 +24,78 @@ public class Projectile
 	 * The World in which the projectile exists.
 	 */
 	World world;
-	
-	
-	
+
+
+
 	/**
 	 * The Y-coordinate for the projectile in meters.
 	 */
 	private double y;
-	
-	
-	
+
+
+
 	/**
 	 * The X-coordinate for the projectile in meters.
 	 */
 	private double x;
-	
-	
+
+
 	/**
 	 * The density of the projectile.
 	 */
 	final double density = 7800;
-	
-	
-	
+
+
+
 	/**
 	 * The mass of the projectile.
 	 */
 	private double mass;
-	
-	
-	
+
+
+
 	/**
 	 * The force with which a projectile is being launched.
 	 */
 	private double force;
-	
-	
-	
+
+
+
 	/**
 	 * The worm who fired the projectile.
 	 */
 	Worm worm;
-	
-	
-	
+
+
+
 	/**
 	 * The earths gravitational pull (9.80665)
 	 */
 	private final double g = 9.80665;
-	
-	
-	
+
+
+
 	/**
 	 * The time the projectile is in the air.
 	 */
 	private double time;
-	
-	
-	
+
+
+
 	/**
 	 * The distance a projectile travels.
 	 */
 	private double distance;
-	
-	
-	
+
+
+
 	/**
 	 * The velocity with which a projectile travels.
 	 */
 	private double velocity;
-	
-	
-	
+
+
+
 	/**
 	 * Creates a projectile and sets the parameters to the given values.
 	 * 
@@ -132,7 +132,7 @@ public class Projectile
 		this.setWorld(worm.getWorld());
 	}
 
-	
+
 	/**
 	 * This method sets the world of the projectile to a given world.
 	 *
@@ -147,8 +147,8 @@ public class Projectile
 		this.world = world;
 	}
 
-	
-	
+
+
 	/**
 	 *  This method returns the world of the projectile.
 	 * 
@@ -160,8 +160,8 @@ public class Projectile
 		return world;
 	}
 
-	
-	
+
+
 	/**
 	 * This method sets the Y-coordinate of the projectile to a given value.
 	 * 
@@ -177,8 +177,8 @@ public class Projectile
 			this.y = y;
 	}
 
-	
-	
+
+
 	/**
 	 * This method sets the X-coordinate of the projectile to a given value.
 	 * 
@@ -193,9 +193,9 @@ public class Projectile
 		if (isValidPosition(x,this.getPosY()))
 			this.x = x;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This method returns the position of the projectile on the Y-axis.
 	 * 
@@ -207,9 +207,9 @@ public class Projectile
 		return y;
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method returns the position of the projectile on the X-axis.
 	 * 
@@ -221,8 +221,8 @@ public class Projectile
 		return x;
 	}
 
-	
-	
+
+
 	/**
 	 * This method returns the radius of the projectile in meters.
 	 * 
@@ -233,12 +233,12 @@ public class Projectile
 		return Math.pow(this.getMass()/(density*(4.0/3.0)*Math.PI), 1.0/3.0);
 	}
 
-	
+
 	/**
 	 * 
 	 */
 	private boolean hitWorm = false;
-	
+
 	/**
 	 * This method returns if the projectile is still active.
 	 * 
@@ -247,14 +247,18 @@ public class Projectile
 	 */
 	public boolean isActive() 
 	{		
-		if (hitWorm == false && this.getWorld().projectileInBounds(this) && this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius()))
-			return true;
-		return false;
+		if (hitWorm == true)
+			return false;
+		if (!this.getWorld().projectileInBounds(this))
+			return false;
+		if (!this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius()))
+			return false;
+		return true;
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method loops over all the worms in world to check if the projectile has hit one
 	 * 
@@ -273,7 +277,7 @@ public class Projectile
 			ArrayList<Worm> worms = new ArrayList<Worm>(getWorld().getWorms());
 			for (Worm worm : worms ) 
 			{
-				if (worm != getWorld().currentWorm() && World.isOverlapping(this.getPosX(), this.getPosY(), this.getRadius(), worm.getPosX(), worm.getPosY(), worm.getRadius())) 
+				if (worm != this.worm && World.isOverlapping(this.getPosX(), this.getPosY(), this.getRadius(), worm.getPosX(), worm.getPosY(), worm.getRadius())) 
 				{
 					damage(worm, damageWeapon());
 					hitWorm = true;
@@ -282,9 +286,9 @@ public class Projectile
 		}
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method returns the damage the selected weapon deals.
 	 * 
@@ -303,8 +307,8 @@ public class Projectile
 		return 0;
 	}
 
-	
-	
+
+
 	/**
 	 * This method applies a given damage points to a given worm.
 	 * 
@@ -323,9 +327,9 @@ public class Projectile
 		worm.setHP(worm.getHP() - damage);
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method destroys the projectile.
 	 * 
@@ -343,8 +347,8 @@ public class Projectile
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * This method launches a given rifle projectile.
 	 * 
@@ -367,7 +371,7 @@ public class Projectile
 			this.getWorld().addProjectile(projectile);
 			projectile.setMass(10);
 			projectile.setForce(1.5);
-			Jump(0.0001);
+			Jump(0.001);
 		}
 		else
 		{
@@ -376,9 +380,9 @@ public class Projectile
 		}
 
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This method sets the mass of the projectile to a given mass
 	 * 
@@ -394,8 +398,8 @@ public class Projectile
 		this.mass = mass;
 	}
 
-	
-	
+
+
 	/**
 	 * This method returns the mass of the projectile.
 	 * 
@@ -407,8 +411,8 @@ public class Projectile
 		return mass;
 	}
 
-	
-	
+
+
 	/**
 	 * This method launches a given bazooka projectile.
 	 * 
@@ -433,7 +437,7 @@ public class Projectile
 			this.getWorld().addProjectile(projectile);
 			projectile.setMass(300);
 			projectile.setForce(2.5 + 0.07*propulsionYield);
-			Jump(0.0001);
+			Jump(0.001);
 		}
 		else
 		{
@@ -442,9 +446,9 @@ public class Projectile
 		}
 
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This method sets the value for the force of the projectile to a given value.
 	 *
@@ -461,9 +465,9 @@ public class Projectile
 		this.force = force;	
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method returns the force applied to the projectile when launched.
 	 * 
@@ -475,46 +479,54 @@ public class Projectile
 		return force;
 	}
 
-	
-	//TODO
+
+	/**
+	 * This method makes the object follow a certain direction
+	 * 
+	 * @param delta
+	 * 		The steps in time that are taken to calculate the position
+	 * 
+	 * @post
+	 * 		The positions get set to the calculated ones
+	 * 			| new.getPosY() == jumpStep[0]
+	 * 			| new.getPosX() == jumpStep[1]
+	 */
 	public void Jump(double delta)
 	{
-	 JumpTime(delta);
-	 System.out.println("whoops");
-		//TODO: return in console: yolo, whoops, yolo, yolo, whoops (wtf?)
+		double[] jumpStep = new double[2];
+		jumpStep = this.JumpStep(this.JumpTime(delta));
+		this.setPosX(jumpStep[0]);
+		this.setPosY(jumpStep[1]);
+		lookForWorms();
 	}
 
-	//TODO
+	/**
+	 * This method calculates the in-air time
+	 * 
+	 * @param delta
+	 * 		
+	 * @return
+	 * 		jumpTime
+	 */
 	public double JumpTime(double delta)
 	{
-		System.out.println("yolo");
-		double X = 0;
-		double Y = 0;
+		double X = worm.getPosX();
+		double Y = worm.getPosY();
 		double[] jumpStepResult = new double[2];
 		double jumpTime = 0;
 		while (hitWorm == false && getWorld().isPassable(X, Y, worm.getRadius()))
-				{
-					jumpStepResult = this.JumpStep(jumpTime);
-					X = jumpStepResult[0];
-					Y = jumpStepResult[1];
-					jumpTime += delta;
-					jumpStepResult = this.JumpStep(jumpTime);
-					X = jumpStepResult[0];
-					Y = jumpStepResult[1];
-					this.setPosX(X);
-					System.out.println(this.getPosX());
-					System.out.println(worm.getPosX());
-					this.setPosY(Y);
-					System.out.println(this.getPosY());
-					System.out.println(worm.getPosY());
-					jumpTime += delta;
-				}
+		{
+			jumpStepResult = this.JumpStep(jumpTime);
+			X = jumpStepResult[0];
+			Y = jumpStepResult[1];
+			jumpTime += delta;
+		}
 		return jumpTime;
 	}
 
-	
-	
-	
+
+
+
 	/**This method sets the time the projectile is in the air to a given value.
 	 * 
 	 * @param time
@@ -530,9 +542,9 @@ public class Projectile
 		this.time = time;
 	}
 
-	
-	
-	
+
+
+
 	/**This method sets the distance the projectile travels to a given value.
 	 * 
 	 * @param distance
@@ -548,9 +560,9 @@ public class Projectile
 		this.distance = distance;
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method returns the distance the projectile travels.
 	 * 
@@ -562,9 +574,9 @@ public class Projectile
 		return distance;
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method returns the time the projectile is in the air.
 	 * 
@@ -576,9 +588,9 @@ public class Projectile
 		return time;
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method sets the velocity by which the projectile travels to a given value.
 	 * 
@@ -594,24 +606,32 @@ public class Projectile
 		this.velocity = velocity;
 	}   
 
-	//TODO
+	/**
+	 * This method calculates the position in air for the object
+	 * 
+	 * @param DeltaT
+	 *		The steps in time to calculate the position 
+	 *
+	 * @return
+	 * 		jumpStep
+	 */
 	public double[] JumpStep(double DeltaT)
 	{       
-		System.out.println("jumpstep");
+		this.setVelocity(this.getForce() * 0.5 / this.getMass());
 		double velocityX = this.getVelocity() * Math.cos(worm.getAngle());
 		double velocityY = this.getVelocity() * Math.sin(worm.getAngle());
 		double x = this.getPosX() + (velocityX * DeltaT);
 		double y = this.getPosY() + (velocityY * DeltaT - 0.5*g*Math.pow(DeltaT, 2));
-		
-		double jumpstep[] = new double[] {x,y};
-		
+
+		double[] jumpstep = new double[] {x,y};
+
 		return jumpstep;
 
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method returns the velocity by which the projectile travels.
 	 * 
@@ -622,9 +642,9 @@ public class Projectile
 		return velocity;
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method checks if a given position is a valid position.
 	 * 

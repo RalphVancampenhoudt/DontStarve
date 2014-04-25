@@ -7,23 +7,15 @@ package worms.model;
  *																																  *
  *		HIGH PRIORITY																											  *
  *		-------------																											  *
- *		1. Shoot doesn't work (projectiles don't seem to spawn and bazooka can never shoot)										  *																						  *
- *				Probably because Jump, jumpstep and jumptime are wrong since it shows the original position						  *
- *				it adds the projectile and removes it, but the projectile is hidden behind worm									  *
- *					QUESTION: do we have to change the jump for worm too then (is working?)										  *
- *						COULD THIS SOLVE LOW PRIORITY NUMBER 1 AND LOW PRIORITY NUMBER 2?										  *
+ *		1. Shoot doesn't work (projectiles don't seem to spawn)										  							  *																						  *
  *																																  *
- *		2. wormInBounds always returns true when jumping out of the world														  *
- *																																  *
- *		3. new team gets instantly removed because there are no worms in it yet													  *		
+ *		2. new team gets instantly removed because there are no worms in it yet													  *		
  *																														  		  *
  *																																  *
  *		LOW PRIORITY																											  *
- *		------------																						          			  *
- *																																  *
- *		1. Make jump stop when hitting object or impassable 																      *
+ *		------------																										      *
  *																																  *																													
- *		2. Worms seem to be able to keep moving, even when AP is gone (Keeps taking smaller amounts (limit))				      *																	      *
+ *		1. Worms seem to be able to keep moving, even when AP is gone (Keeps taking smaller amounts (limit))				      *																	      *
  *			 																													  *
  *																																  *
  **********************************************************************************************************************************/
@@ -66,7 +58,6 @@ import java.util.List;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
-import worms.util.Util;
 
 public class Worm 
 {                    
@@ -431,36 +422,6 @@ public class Worm
 	}
 
 	/**
-	 * The method to make the worm jump to a new position
-	 * 
-	 * @post
-	 * 		We use the values of JumpStep and JumpTime to calculate the value of the new position the worm will be in and we drain all his AP
-	 * 			| new.getPosX() == newPosition[0]
-	 * 			| new.getPosY() == newPosition[1]
-	 * 
-	 * @effect 
-	 * 		lookForFood() 
-	 * 			sees if the worm is going to consume a piece of food
-	 * 
-	 * @effect
-	 * 		fall() 
-	 * 			sees if the worm can fall from the end location down to the next adjacent spot
-	 * 
-	 */
-	public void Jump() 
-	{
-		if (this.canJump())
-		{	
-			double [] newPosition = this.JumpStep(this.JumpTime());
-			this.setPosX(newPosition[0]);
-			this.setPosY(newPosition[1]);
-			this.setCurrentAP(0);
-		}
-		lookForFood();
-		fall();
-	}
-
-	/**
 	 * Method to check whether the worm can jump from this location
 	 * 
 	 * @return
@@ -469,92 +430,9 @@ public class Worm
 	 */
 	public boolean canJump()
 	{
-		if (this.getCurrentAP() > 0 && this.getWorld().isPassable(this.getPosX(), this.getPosY(), this.getRadius()))
+		if (this.getCurrentAP() > 0 && this.getWorld().isPassable(this.getPosX(), this.getPosY(), 0))
 			return true;
 		return false;
-	}
-
-
-	/**
-	 * The method to calculate the time the worm is in the air
-	 *                     
-	 * @return 	
-	 * 		- this.getTime() if the worm has enough AP
-	 * 			| !this.getCurrentAP == 0
-	 * 		- 0.0 if there is not enough AP left
-	 * 			| this.getCurrentAP == 0
-	 * 
-	 * @post
-	 * 		If the worm still has AP, we set the force, velocity, density and time to their calculated values
-	 * 		| new.getForce() == (5*this.getCurrentAP() + this.getMass() * g)
-	 * 		| new.getVelocity() == (this.getForce() / this.getMass() * 0.5)
-	 * 		| new.getDistance() == ((this.getVelocity² * sin(2*this.getAngle()) / g)
-	 * 		| new.getTime() == (this.getDistance() / (this.getVelocity() * cos(this.getAngle()) )
-	 * 
-	 * 		If the worm does not have enough AP, we set the amount of time in the air to zero
-	 * 		| new.getTime() == 0.0
-	 */
-	public double JumpTime()
-	{
-		if (this.getCurrentAP() != 0)
-		{
-			this.setForce((5 * this.getCurrentAP()) + (this.getMass() * g));
-			this.setVelocity(this.getForce()/this.getMass()*0.5);
-			this.setDistance( (Math.pow(this.getVelocity(), 2) * Math.sin(2*this.getAngle()) ) / g);
-			this.setTime(this.getDistance() / (this.getVelocity() * Math.cos(this.getAngle()) ) );	
-			return this.getTime();
-		}
-		else 
-		{
-			return 0.0;
-		}
-	}
-
-
-
-	/**
-	 * Method to calculate the position of the worm while jumping
-	 *    
-	 * @param DeltaT
-	 * 		The amount of time that has passed between two points in the jump
-	 * 
-	 * @return 
-	 * 		- the array jumpstep with the values for x and y if the angle is between 0 and PI
-	 * 			| !this.getAngle() < 0
-	 * 			| !this.getAngle() > Math.PI
-	 * 		- the array with the value of the original posX and posY (worm will not jump)
-	 * 			| this.getAngle() < 0
-	 * 			| this.getAngle() > Math.PI
-	 * 
-	 * @post
-	 * 		The worm will get a new position every moment inside the jump. This position is calculated by giving the parameters velocityX
-	 * 		and velocityY. These are used to calculate the position x and y.
-	 * 			- If the angle is between 0 and PI
-	 * 				| new.JumpStep == jumpstep
-	 * 			- If the angle is not between 0 and PI
-	 * 				| new.JumpStep == original
-	 * 			
-	 */
-	public double[] JumpStep(double DeltaT)
-	{       
-		double velocityX = this.getVelocity() * Math.cos(this.getAngle());
-		double velocityY = this.getVelocity() * Math.sin(this.getAngle());
-		double x = this.getPosX() + (velocityX * DeltaT);
-		double y = this.getPosY() + (velocityY * DeltaT - 0.5*g*Math.pow(DeltaT, 2));
-
-		double jumpstep[] = new double[] {x,y};
-
-
-
-		if (Util.fuzzyLessThanOrEqualTo(0, this.getAngle()) && (Util.fuzzyLessThanOrEqualTo(this.getAngle(), Math.PI)) && getWorld().isPassable(x, y, 0))
-			return jumpstep;
-
-		else 
-		{
-			DeltaT = 0;
-			return jumpstep;
-		}
-
 	}
 
 	/**
@@ -932,6 +810,7 @@ public class Worm
 	 */
 	private int index = 0;
 
+
 	/**
 	 * This method sets the value for the selected weapon of a worm
 	 * 
@@ -1012,7 +891,7 @@ public class Worm
 	{
 		if (isValidHP(HP))
 			this.currentHP = HP;
-		
+
 		if (HP < 0)
 		{
 			this.currentHP = 0;
@@ -1129,7 +1008,7 @@ public class Worm
 	{
 		if (!isValidPropulsionYield(propulsionYield))
 			throw new IllegalArgumentException("Not a valid value for propulsionYield");
-		
+
 		if (this.canShoot())
 		{
 			if (this.getSelectedWeapon() == "Bazooka")
@@ -1281,7 +1160,7 @@ public class Worm
 			team.addWorm(this);
 	}
 
-	
+
 	/**
 	 * Method to check whether the worm can fall down
 	 * 
@@ -1320,13 +1199,13 @@ public class Worm
 		while (this.canFall())
 		{
 			this.setPosY(this.getPosY() - 0.01*this.getRadius());
-			double distanceFallen = begin - this.getPosY();
-			this.setHP((int) Math.floor(this.getHP() - 3*(distanceFallen)));
 		}
+		double distanceFallen = begin - this.getPosY();
+		this.setHP((int) Math.floor(this.getHP() - 3*(distanceFallen)));
 		lookForFood();
 	}
 
-	
+
 	/**
 	 * Method to move the worm
 	 * 
@@ -1352,7 +1231,7 @@ public class Worm
 		fall();
 	}
 
-	
+
 	/**
 	 * Method to retrieve the maximal distance the worm can move at a time 
 	 * 
@@ -1432,8 +1311,8 @@ public class Worm
 		return output;
 	}
 
-	
-	
+
+
 	/**
 	 * Method to calculate the cost of AP for a move of a certain distance
 	 * 
@@ -1449,8 +1328,8 @@ public class Worm
 		double slope = Math.atan2(distance[1], distance[0]);
 		return (int) Math.ceil( Math.abs(Math.cos(slope)) + Math.abs(4*Math.sin(slope)));
 	}
-	
-	
+
+
 
 	/**
 	 * Method to inspect whether the worm can move from this location
@@ -1464,9 +1343,9 @@ public class Worm
 		double[] distance = this.getMoveDistance();
 		return (isValidAP(this.getCurrentAP() - this.calculateAPCostMove(distance)) && this.isAlive());
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Method to inspect whether the amount of current AP is a valid amount
 	 * 
@@ -1486,12 +1365,12 @@ public class Worm
 		if ((0 > hp) && (hp > this.getMaxHP()))
 			throw new IllegalArgumentException("Not a valid value for HP");
 		if (hp == 0)
-				return false;
+			return false;
 		return true;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Method to inspect whether the value of propulsionYield is a valid one
 	 * 
@@ -1511,5 +1390,81 @@ public class Worm
 		if ((0 > propulsionYield) && (propulsionYield > 100))
 			throw new IllegalArgumentException("Not a valid value for propulsionYield");
 		return true;
+	}
+
+	/**
+	 * This method makes the object follow a certain direction
+	 * 
+	 * @param delta
+	 * 		The steps in time that are taken to calculate the position
+	 * 
+	 * @post
+	 * 		The positions get set to the calculated ones
+	 * 			| new.getPosY() == jumpStep[0]
+	 * 			| new.getPosX() == jumpStep[1]
+	 */
+	public void Jump(double delta)
+	{
+		double begin = this.getPosY();
+		if (this.canJump())
+		{
+			double[] jumpStep = new double[2];
+			jumpStep = this.JumpStep(this.JumpTime(delta));
+			this.setPosX(jumpStep[0]);
+			this.setPosY(jumpStep[1]);
+			this.setCurrentAP(0);
+			if (this.getPosY() < begin)
+				this.setHP((int) Math.floor(this.getHP() - 3*(begin - this.getPosY())));
+		}
+		lookForFood();
+	}
+
+
+	/**
+	 * This method calculates the in-air time
+	 * 
+	 * @param delta
+	 * 		
+	 * @return
+	 * 		jumpTime
+	 */
+	public double JumpTime(double delta)
+	{
+		double X = this.getPosX();
+		double Y = this.getPosY();
+		double[] jumpStepResult = new double[2];
+		double jumpTime = 0;
+		while (getWorld().isPassable(X, Y, this.getRadius()))
+		{
+			jumpStepResult = this.JumpStep(jumpTime);
+			X = jumpStepResult[0];
+			Y = jumpStepResult[1];
+			jumpTime += delta;
+		}
+		return jumpTime;
+	}
+
+	/**
+	 * This method calculates the position in air for the object
+	 * 
+	 * @param DeltaT
+	 *		The steps in time to calculate the position 
+	 *
+	 * @return
+	 * 		jumpStep
+	 */
+	public double[] JumpStep(double DeltaT)
+	{       
+		this.setForce(5*this.getCurrentAP() + this.getMass() * g);
+		this.setVelocity(this.getForce() * 0.5 / this.getMass());
+		double velocityX = this.getVelocity() * Math.cos(this.getAngle());
+		double velocityY = this.getVelocity() * Math.sin(this.getAngle());
+		double x = this.getPosX() + (velocityX * DeltaT);
+		double y = this.getPosY() + (velocityY * DeltaT - 0.5*g*Math.pow(DeltaT, 2));
+
+		double[] jumpstep = new double[] {x,y};
+
+		return jumpstep;
+
 	}
 }

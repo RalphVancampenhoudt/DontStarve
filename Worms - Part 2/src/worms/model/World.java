@@ -22,67 +22,67 @@ import static org.junit.Assert.*;
  */
 public class World 
 {
-	
+
 	/**
 	 * The height of the world
 	 */
 	private double worldHeight;
-	
-	
+
+
 	/**
 	 * The width of the world
 	 */
 	private double worldWidth;
-	
-	
+
+
 	/**
 	 * An Array of passable locations in the world
 	 */
 	private boolean[][] passableMap;
-	
-	
+
+
 	/**
 	 * A list of all worms in this world
 	 */
 	public List<Worm> worms = new ArrayList<Worm>();
-	
-	
+
+
 	/**
 	 * A list of all food in this world
 	 */
 	public List<Food> fodder = new ArrayList<Food>();
-	
-	
+
+
 	/**
 	 * A list of all projectiles in this world
 	 */
 	public List<Projectile> projectiles = new ArrayList<Projectile>();
-	
-	
+
+
 	/**
 	 * A list of all teams in this world
 	 */
 	public List<Team> teams = new ArrayList<Team>();
-	
-	
+
+
 	/**
 	 * An index to do loops through the earlier lists
 	 */
 	private int index = 0;
-	
-	
+
+
 	/**
 	 * The currently selected team to add worms to
 	 */
 	private Team currentTeam;
-	
-	
+
+
 	/**
 	 * A random number generator
 	 */
 	Random RandomGenerator = new Random();
 
-	
+
 	/**
 	 * Creates the world with the initializing parameters
 	 * 
@@ -134,7 +134,7 @@ public class World
 		RandomGenerator = random;
 	}
 
-	
+
 	/**
 	 * This method gets the currently selected worm
 	 * 
@@ -150,11 +150,16 @@ public class World
 	{
 		Worm worm = worms.get(this.getIndex());
 		if (worm.getCurrentAP() == 0 && worms.size() > 1)
+		{
+			worm.setHP(worm.getHP() + 10);
+			worm.setCurrentAP(worm.getMaxHP());
 			this.nextWorm();
+		}
+
 		return worm;
 	}
 
-	
+
 	/**
 	 * This method increases the index by 1 to get to the next worm
 	 * 
@@ -212,7 +217,7 @@ public class World
 		return worms;
 	}
 
-	
+
 	/**
 	 * This method returns all the food in this world
 	 * 
@@ -224,7 +229,7 @@ public class World
 		return fodder;
 	}
 
-	
+
 	/**
 	 * This method returns all the projectiles in this world (never more than 1)
 	 * 
@@ -236,7 +241,7 @@ public class World
 		return projectiles;
 	}
 
-	
+
 	/**
 	 * This method returns all the teams in this world (never more than 10)
 	 * 
@@ -248,7 +253,7 @@ public class World
 		return teams;
 	}
 
-	
+
 	/**
 	 * This method returns the amount of worms in this world
 	 * 
@@ -260,7 +265,7 @@ public class World
 		return worms.size();
 	}
 
-	
+
 	/**
 	 * This method returns the amount of teams in this world (never more than 10)
 	 * 
@@ -272,7 +277,7 @@ public class World
 		return teams.size();
 	}
 
-	
+
 	/**
 	 * This method returns the amount of projectiles in this world (never more than 1)
 	 * 
@@ -284,7 +289,7 @@ public class World
 		return projectiles.size();
 	}
 
-	
+
 	/**
 	 * This method returns the amount of food in this world
 	 * 
@@ -296,7 +301,7 @@ public class World
 		return fodder.size();
 	}
 
-	
+
 	/**
 	 * This method returns the winner of the game (either a team or a worm)
 	 * 
@@ -347,7 +352,7 @@ public class World
 		return false;
 	}
 
-	
+
 	/**
 	 * This method checks if this worm exists 
 	 * 
@@ -410,7 +415,7 @@ public class World
 		double randomAngle = RandomGenerator.nextDouble() * 2 * Math.PI;
 		double randomRadius = RandomGenerator.nextDouble() * 0.75 + 0.25;
 
-		
+
 		Worm worm = new Worm(this, randomPositionX, randomPositionY, randomRadius, randomAngle, "Press N to rename");
 		worm.setPosX(this.findAdjacentX(worm, randomPositionX));
 		worm.setPosY(this.findAdjacentY(worm, randomPositionY));
@@ -509,7 +514,7 @@ public class World
 			return 0;
 	}
 
-	
+
 	/**
 	 * This method finds a value for Y that is adjacent nearby the location of the worm
 	 * 
@@ -590,7 +595,7 @@ public class World
 			return 0;
 	}
 
-	
+
 	/**
 	 * This method finds a value for Y that is adjacent nearby the location of the food
 	 * 
@@ -654,7 +659,7 @@ public class World
 		worms.remove(worm);
 	}
 
-	
+
 	/**
 	 * This method checks if this food exists 
 	 * 
@@ -670,7 +675,7 @@ public class World
 		return (food != null);
 	}
 
-	
+
 	/**
 	 * This method checks if this food is in world
 	 * 
@@ -686,7 +691,7 @@ public class World
 		return fodder.contains(food);
 	}
 
-	
+
 	/**
 	 * This method adds a food to this world on a random adjacent location where it is not overlapping with any worm or other food
 	 * 
@@ -746,7 +751,7 @@ public class World
 			addFood();
 	}
 
-	
+
 	/**
 	 * This method removes a food from the world if all conditions are met
 	 * 
@@ -772,7 +777,7 @@ public class World
 		fodder.remove(food);
 	}
 
-	
+
 	/**
 	 * This method checks if this projectile exists 
 	 * 
@@ -788,7 +793,7 @@ public class World
 		return (projectile != null);
 	}
 
-	
+
 	/**
 	 * This method checks if this projectile is in world
 	 * 
@@ -804,7 +809,7 @@ public class World
 		return projectiles.contains(projectile);
 	}
 
-	
+
 	/**
 	 * This method adds a projectile to this world
 	 * 
@@ -824,13 +829,13 @@ public class World
 	 */
 	public void addProjectile(Projectile projectile)
 	{
-		assertEquals (true ,projectileExists(projectile));
-		assertEquals(true,projectile.getWorld() == this);
+		assertEquals (true, projectileExists(projectile));
+		assertEquals(true, projectile.getWorld() == this);
 		assertEquals (false, projectileInWorld(projectile));
 		projectiles.add(projectile);
 	}
 
-	
+
 	/**
 	 * This method removes a projectile from the world if all conditions are met
 	 * 
@@ -851,8 +856,9 @@ public class World
 	 */
 	public void removeProjectile(Projectile projectile) 
 	{
-		assert (projectileExists(projectile)) && (projectile.getWorld() == this);
-		assert (projectileInWorld(projectile));
+		assertEquals (true, projectileExists(projectile));
+		assertEquals (true, projectile.getWorld() == this);
+		assertEquals (true, projectileInWorld(projectile));
 		projectiles.remove(projectile);
 	}
 
@@ -877,7 +883,7 @@ public class World
 		return Math.sqrt(Math.pow((newX - x), 2) + Math.pow((newY -y), 2));
 	}
 
-	
+
 	/**
 	 * This method checks if this team exists 
 	 * 
@@ -893,7 +899,7 @@ public class World
 		return (team != null);
 	}
 
-	
+
 	/**
 	 * This method checks if this team is in world
 	 * 
@@ -909,7 +915,7 @@ public class World
 		return teams.contains(team);
 	}
 
-	
+
 	/**
 	 * This method adds a team to this world
 	 * 
@@ -943,8 +949,8 @@ public class World
 		this.setCurrentTeam(team);
 		teams.add(team);
 	}
-	
-	
+
+
 	/**
 	 * This method removes a team from the world if all conditions are met
 	 * 
@@ -989,7 +995,7 @@ public class World
 			return true;
 	}
 
-	
+
 	/**
 	 * The method to check whether the food is in worldbounds
 	 * 
@@ -1008,7 +1014,7 @@ public class World
 			return true;
 	}
 
-	
+
 	/**
 	 * The method to check whether the projectile is in worldbounds
 	 * 
@@ -1066,7 +1072,7 @@ public class World
 		return worldWidth;
 	}
 
-	
+
 	/**
 	 * The method to set the worldWidth
 	 * 
@@ -1192,7 +1198,7 @@ public class World
 		return (this.getWorldHeight() / ((double) getPixelsY()));
 	}
 
-	
+
 	/**
 	 * This method changes a position to a pixel
 	 * 
@@ -1283,7 +1289,7 @@ public class World
 		return isPassablePixel(pixel[0],pixel[1]);
 	}
 
-	
+
 	/**
 	 * This method checks if the circle is passable
 	 * 
@@ -1404,7 +1410,7 @@ public class World
 		return (norm < sumRadius);
 	}
 
-	
+
 	/**
 	 * The method to get the active projectile
 	 * 

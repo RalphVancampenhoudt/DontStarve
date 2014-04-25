@@ -143,8 +143,8 @@ public class TestWorm {
         @Test
         public void testJumpTrue(){
                 testWorm1.setAngle(Math.PI/4);
-                double[] landingSpot = testWorm1.JumpStep(testWorm1.JumpTime());
-                testWorm1.Jump();
+                double[] landingSpot = testWorm1.JumpStep(testWorm1.JumpTime(0.001));
+                testWorm1.Jump(0.001);
                 assertEquals(landingSpot[0], testWorm1.getPosX(),worms.util.Util.DEFAULT_EPSILON );
                 assertEquals(landingSpot[1], testWorm1.getPosY(),worms.util.Util.DEFAULT_EPSILON );
                 assertEquals(0,testWorm1.getCurrentAP(), worms.util.Util.DEFAULT_EPSILON);
@@ -153,8 +153,8 @@ public class TestWorm {
         @Test
         public void testJumpFalse(){
                 testWorm1.setAngle(Math.PI*(3/4));
-                double[] landingSpot = testWorm1.JumpStep(testWorm1.JumpTime());
-                testWorm1.Jump();
+                double[] landingSpot = testWorm1.JumpStep(testWorm1.JumpTime(0.001));
+                testWorm1.Jump(0.001);
                 assertEquals(landingSpot[0], testWorm1.getPosX(),worms.util.Util.DEFAULT_EPSILON );
                 assertEquals(landingSpot[1], testWorm1.getPosY(),worms.util.Util.DEFAULT_EPSILON );
                 assertEquals(0,testWorm1.getCurrentAP(), worms.util.Util.DEFAULT_EPSILON);
@@ -163,7 +163,7 @@ public class TestWorm {
         @Test
         public void testJumpUp(){
                 testWorm1.setAngle(Math.PI/2);
-                testWorm1.Jump();
+                testWorm1.Jump(0.001);
                 assertEquals(1.0, testWorm1.getPosX(),worms.util.Util.DEFAULT_EPSILON );
                 assertEquals(1.0, testWorm1.getPosY(),worms.util.Util.DEFAULT_EPSILON );
                 assertEquals(0,testWorm1.getCurrentAP(), worms.util.Util.DEFAULT_EPSILON);

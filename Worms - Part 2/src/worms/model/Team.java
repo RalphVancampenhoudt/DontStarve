@@ -31,7 +31,7 @@ public class Team
 	 * The list of the members in the team.
 	 */
 	private ArrayList<Worm> teamMembers;
-	
+
 	private boolean initiated ;
 
 
@@ -256,8 +256,8 @@ public class Team
 	}
 
 
-	
-	
+
+
 	/**
 	 * This method adds a given worm to the list of this team.
 	 * 
@@ -282,8 +282,8 @@ public class Team
 	}
 
 
-	
-	
+
+
 	/**
 	 * This method removes a given worm from the member list of this team. 
 	 * @param worm
@@ -303,9 +303,9 @@ public class Team
 		teamMembers.remove(worm);
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method verifies if the name of the team is a valid name.
 	 * 
@@ -323,7 +323,7 @@ public class Team
 
 
 
-	
+
 	/**
 	 * This method verifies if this team is active.
 	 * 
@@ -337,17 +337,17 @@ public class Team
 		return false;
 	}
 
-	
-	 /**
-	  * This method removes a team from the world.
-	  * 
-	  * if the team is not active anymore, we destroy it
-	  * 		| !isActive()
-	  * 
-	  * @post
-	  * 	removes team from the world
-	  * 		| new.world == null
-	  */
+
+	/**
+	 * This method removes a team from the world.
+	 * 
+	 * if the team is not active anymore, we destroy it
+	 * 		| !isActive()
+	 * 
+	 * @post
+	 * 	removes team from the world
+	 * 		| new.world == null
+	 */
 	public void destroy()
 	{
 		if (!isActive())

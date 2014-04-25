@@ -20,25 +20,25 @@ public class Food
 	 */
 	World world;
 
-	
+
 	/**
 	 * The X-coordinate for the food in meters.
 	 */
 	double x;
 
-	
+
 	/**
 	 * The Y-coordinate for the food in meters.
 	 */
 	double y;
 
-	
+
 	/**
 	 * The radius of the food in meters.
 	 */
 	double radius;
 
-	
+
 	/**
 	 * The state of the food if it is eaten or not.
 	 */
@@ -91,8 +91,8 @@ public class Food
 		this.world = world;
 	}
 
-	
-	
+
+
 	/**
 	 * This method sets the value for the Y-position of the food.
 	 * 
@@ -107,8 +107,8 @@ public class Food
 		if (isValidPosition(this.getPosX(), y))
 			this.y = y;
 	}
-	
-	
+
+
 	/**
 	 * This method sets the value for the X-position of the food.
 	 * 
@@ -123,8 +123,8 @@ public class Food
 		if (isValidPosition(x,this.getPosY()))
 			this.x = x;
 	}
-	
-	
+
+
 	/**
 	 * This method returns the position of the food on the Y-axis.
 	 * @return y
@@ -136,20 +136,20 @@ public class Food
 		return y;
 	}
 
-	
+
 	/**
 	 * This method returns the position of the food on the X-axis.
 	 * @return x
 	 */
-	
+
 	@Basic @Raw
 	public double getPosX() 
 	{
 		return x;
 	}
 
-	
-	
+
+
 	/**
 	 * This method returns the world in which the food exists.
 	 * @return world
@@ -159,77 +159,77 @@ public class Food
 	{
 		return world;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This method returns the radius of the food.
 	 * @return 0.20
 	 */
 	@Basic @Raw	
-	 public double getRadius() 
-	 {
-		 return 0.20;
-	 }
+	public double getRadius() 
+	{
+		return 0.20;
+	}
 
-	
-	 /**
-	  * This method checks if the food is still active.
-	  * 
-	  * @return true if eaten is false, else returns false.
-	  * 	| eaten == false
-	  */
-	 public boolean isActive() 
-	 {
-		 if (eaten)
-			 return false;
-		 return true;
-	 }
 
-	 /**
-	  * This method checks is a given position is a valid position.
-	  * 
-	  * @param posX
-	  * 		The position of the worm on the X-axis
-	  * 
-	  * @param posY
-	  * 		The position of the worm on the Y-axis
-	  * @return
-	  * 		true if the given position is a valid one.
-	  * 
-	  * @throws IllegalArgumentException
-	  * If the position of either X or Y is equal to infinity (both +infinity and -infinity)
-	  * 			| posX == Double.NEGATIVE_INFINITY
-	  * 			| posY == Double.NEGATIVE_INFINITY
-	  * 			| posX == Double.POSITIVE_INFINITY
-	  * 			| posY == Double.POSITIVE_INFINITY
-	  * 		
-	  */
-	 public boolean isValidPosition(double posX, double posY) throws IllegalArgumentException 
-	 {
-		 if ((posX == Double.NEGATIVE_INFINITY) || (posY == Double.NEGATIVE_INFINITY) || (posX == Double.POSITIVE_INFINITY) || (posY == Double.POSITIVE_INFINITY))
-			 throw new IllegalArgumentException("Not a valid value for position");
-		 return true;
-	 }
-	 
-	 
-	 /**
-	  * This method removes a food from the world.
-	  * 
-	  * if the food is not active anymore, we destroy it
-	  * 		| !isActive()
-	  * 
-	  * @post
-	  * 	removes food from the world
-	  * 		| new.getWorld() == null
-	  */
-	 public void destroy()
-	 {
-		 if (!isActive())
-		 {
-			 world.removeFood(this);
-			 this.setWorld(null);
-		 }
-	 }
+	/**
+	 * This method checks if the food is still active.
+	 * 
+	 * @return true if eaten is false, else returns false.
+	 * 	| eaten == false
+	 */
+	public boolean isActive() 
+	{
+		if (eaten)
+			return false;
+		return true;
+	}
+
+	/**
+	 * This method checks is a given position is a valid position.
+	 * 
+	 * @param posX
+	 * 		The position of the worm on the X-axis
+	 * 
+	 * @param posY
+	 * 		The position of the worm on the Y-axis
+	 * @return
+	 * 		true if the given position is a valid one.
+	 * 
+	 * @throws IllegalArgumentException
+	 * If the position of either X or Y is equal to infinity (both +infinity and -infinity)
+	 * 			| posX == Double.NEGATIVE_INFINITY
+	 * 			| posY == Double.NEGATIVE_INFINITY
+	 * 			| posX == Double.POSITIVE_INFINITY
+	 * 			| posY == Double.POSITIVE_INFINITY
+	 * 		
+	 */
+	public boolean isValidPosition(double posX, double posY) throws IllegalArgumentException 
+	{
+		if ((posX == Double.NEGATIVE_INFINITY) || (posY == Double.NEGATIVE_INFINITY) || (posX == Double.POSITIVE_INFINITY) || (posY == Double.POSITIVE_INFINITY))
+			throw new IllegalArgumentException("Not a valid value for position");
+		return true;
+	}
+
+
+	/**
+	 * This method removes a food from the world.
+	 * 
+	 * if the food is not active anymore, we destroy it
+	 * 		| !isActive()
+	 * 
+	 * @post
+	 * 	removes food from the world
+	 * 		| new.getWorld() == null
+	 */
+	public void destroy()
+	{
+		if (!isActive())
+		{
+			world.removeFood(this);
+			this.setWorld(null);
+		}
+	}
 
 }
