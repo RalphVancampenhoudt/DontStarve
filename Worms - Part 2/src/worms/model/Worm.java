@@ -7,15 +7,14 @@ package worms.model;
  *																																  *
  *		HIGH PRIORITY																											  *
  *		-------------																											  *
- *		1. Shoot doesn't work (projectiles don't seem to spawn)										  							  *																						  *
+ *		1. Shoot doesn't work (projectiles don't seem to spawn or spawn at bottom, causing stackoverflow when shooting again)	  *																						  *
  *																																  *
  *		2. new team gets instantly removed because there are no worms in it yet													  *		
  *																														  		  *
  *																																  *
  *		LOW PRIORITY																											  *
  *		------------																										      *
- *																																  *																													
- *		1. Worms seem to be able to keep moving, even when AP is gone (Keeps taking smaller amounts (limit))				      *																	      *
+ *																															      *
  *			 																													  *
  *																																  *
  **********************************************************************************************************************************/
@@ -1223,12 +1222,15 @@ public class Worm
 		if (!canMove())
 			throw new IllegalArgumentException("This move is not available");
 
-		double[] distance = this.getMoveDistance();
-		this.setCurrentAP(this.getCurrentAP() - this.calculateAPCostMove(distance));
-		this.setPosX(getPosX() + distance[0]);
-		this.setPosY(getPosY() + distance[1]);
-		lookForFood();
-		fall();
+		if (this.getCurrentAP() > 0)
+		{
+			double[] distance = this.getMoveDistance();
+			this.setCurrentAP(this.getCurrentAP() - this.calculateAPCostMove(distance));
+			this.setPosX(getPosX() + distance[0]);
+			this.setPosY(getPosY() + distance[1]);
+			lookForFood();
+			fall();
+		}
 	}
 
 
