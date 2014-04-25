@@ -8,8 +8,7 @@ package worms.model;
  *		HIGH PRIORITY																											  *
  *		-------------																											  *
  *		1. Shoot doesn't work (projectiles don't seem to spawn or spawn at bottom, causing stackoverflow when shooting again)	  *																						  *
- *																																  *
- *		2. new team gets instantly removed because there are no worms in it yet													  *		
+ *																																  *												  *		
  *																														  		  *
  *																																  *
  *		LOW PRIORITY																											  *
